@@ -19,6 +19,9 @@ import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseView
 
 import java.util.List;
 
+/**
+ * Фрагмент для отображения объявлений, согласено выбранным параметрам
+ */
 public class CarCellsFragment extends Fragment {
     private CarCellsFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;

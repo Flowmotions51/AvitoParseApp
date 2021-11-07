@@ -16,6 +16,9 @@ import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarModelAda
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Фрагмент для выбора марки автомобиля
+ */
 public class CarBrandPickerFragment extends Fragment {
     private CarModelPickerFragmentLayoutBinding mBinding;
     private ViewGroup container;

@@ -19,6 +19,9 @@ import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Фрагмент для выбора модели автомобиля
+ */
 public class CarModelPickerFragment extends Fragment {
     private CarModelPickerFragmentLayoutBinding mBinding;
     private ViewGroup container;

@@ -1,5 +1,6 @@
 package com.example.mycompany.avitoparseapp.presentation.viewmodel;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -25,6 +26,10 @@ public class AvitoParseViewModel extends ViewModel {
         this.parserRepository = parserRepository;
     }
 
+    /**
+     * Метод для получения списка объявлений автомобилей на основе переданных параметров
+     * @param params - параметры для объявлений (марка, модель и тд).
+     */
     public void loadCellsData(String params) {
         mDisposable = parserRepository.loadCarCellsAsyncRx(params)
                 .doOnSubscribe(disposable -> {
@@ -36,6 +41,10 @@ public class AvitoParseViewModel extends ViewModel {
                 .subscribe(carCellsData::setValue, error -> System.out.println(error.getLocalizedMessage()));
     }
 
+    /**
+     * Метод для получения полного объявления автомобиля на основе объекта CarCell
+     * @param carCell - выбранное объявление из списка, который был получен в loadCellsData(String params)
+     */
     public void loadCarDataSync(CarCell carCell) {
         mDisposable = parserRepository.loadCarItemAsyncRx(carCell)
                 .doOnSubscribe(disposable -> {
@@ -56,20 +65,33 @@ public class AvitoParseViewModel extends ViewModel {
         }
     }
 
-    //
+
+    //todo Без этого метода возникает дефект при открытии во второй раз CarCellsFragment
     public void resetLiveDataCarCells() {
         this.carCellsData = new MutableLiveData<>();
     }
 
-    public MutableLiveData<Boolean> getIsInProgress() {
+    /**
+     * Getter LiveData<Boolean></> для подписки
+     * @return LiveData<Boolean>
+     */
+    public LiveData<Boolean> getIsInProgress() {
         return isInProgress;
     }
 
-    public MutableLiveData<List<CarCell>> getCarCellsData() {
+    /**
+     * Getter LiveData<List<CarCell>></> для подписки
+     * @return LiveData<List<CarCell>>
+     */
+    public LiveData<List<CarCell>> getCarCellsData() {
         return carCellsData;
     }
 
-    public MutableLiveData<Car> getCarData() {
+    /**
+     * Getter LiveData<Car></> для подписки
+     * @return LiveData<Car>
+     */
+    public LiveData<Car> getCarData() {
         return carData;
     }
 

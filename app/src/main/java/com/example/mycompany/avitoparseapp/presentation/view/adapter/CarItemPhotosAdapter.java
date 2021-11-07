@@ -1,5 +1,6 @@
 package com.example.mycompany.avitoparseapp.presentation.view.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import com.example.mycompany.avitoparseapp.IOnItemTextAction;
 import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.databinding.ModelPickerItemLayoutBinding;
 import com.example.mycompany.avitoparseapp.databinding.PhotoCarLayoutBinding;
+import com.facebook.shimmer.Shimmer;
+import com.facebook.shimmer.ShimmerDrawable;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -55,8 +58,17 @@ public class CarItemPhotosAdapter extends RecyclerView.Adapter<CarItemPhotosAdap
         }
 
         public void setPhoto(String photoLink) {
+            Shimmer shimmer = new Shimmer.ColorHighlightBuilder()
+                    .setBaseColor(Color.parseColor("#F3F3F3"))
+                    .setBaseAlpha(1)
+                    .setHighlightColor(Color.parseColor("#E7E7E7"))
+                    .setHighlightAlpha(1)
+                    .setDropoff(50)
+                    .build();
+            ShimmerDrawable shimmerDrawable = new ShimmerDrawable();
+            shimmerDrawable.setShimmer(shimmer);
             Picasso.get().load(photoLink)
-                    //.placeholder(R.drawable.progress_animation)
+                    .placeholder(shimmerDrawable)
                     .into(mBinding.carPhoto);
         }
     }
