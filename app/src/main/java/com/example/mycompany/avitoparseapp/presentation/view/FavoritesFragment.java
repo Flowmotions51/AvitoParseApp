@@ -41,11 +41,7 @@ public class FavoritesFragment extends Fragment {
                 return (T) new AvitoParseViewModel(parserRepository);
             }
         }).get(AvitoParseViewModel.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt("BackStackNumber", 2);
-        bundle.putString("BackStackTag", "BackStackNumber2");
         CarBrandPickerFragment carBrandPickerFragment = new CarBrandPickerFragment();
-        carBrandPickerFragment.setArguments(bundle);
         getChildFragmentManager().beginTransaction()
                 .addToBackStack("CarBrandPickerFragment2")
                 .add(mBinding.containerFavorites.getId(), carBrandPickerFragment)

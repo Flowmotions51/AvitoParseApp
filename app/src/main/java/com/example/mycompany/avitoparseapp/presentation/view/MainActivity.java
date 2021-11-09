@@ -39,8 +39,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                         switch (position) {
-                            case 0: tab.setText("Поиск"); break;
-                            case 1: tab.setText("Избранное"); break;
+                            case 0:
+                                tab.setText("Поиск");
+                                break;
+                            case 1:
+                                tab.setText("Избранное");
+                                break;
                         }
                     }
                 });
@@ -78,30 +82,17 @@ public class MainActivity extends AppCompatActivity {
         Fragment currentViewpagerFragment = getSupportFragmentManager()
                 .findFragmentByTag("f" + viewPager2.getCurrentItem());
         FragmentManager childFragmentManager = currentViewpagerFragment.getChildFragmentManager();
-        if (currentViewpagerFragment instanceof MainContainerFragment) {
-            if (childFragmentManager.getFragments().size() == 0) return;
-            Fragment topFragment = childFragmentManager.getFragments().get(childFragmentManager.getFragments().size() - 1);
-            if(!(topFragment instanceof CarBrandPickerFragment)) {
-                childFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_left, R.anim.exit_to_right)
-                        .hide(topFragment)
-                        .commitNow();
-                childFragmentManager.beginTransaction()
-                        .remove(topFragment)
-                        .commit();
-            }
-        } else if (currentViewpagerFragment instanceof FavoritesFragment) {
-            if (childFragmentManager.getFragments().size() == 0) return;
-            Fragment topFragment = childFragmentManager.getFragments().get(childFragmentManager.getFragments().size() - 1);
-            if(!(topFragment instanceof CarBrandPickerFragment)) {
-                childFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_left, R.anim.exit_to_right)
-                        .hide(topFragment)
-                        .commitNow();
-                childFragmentManager.beginTransaction()
-                        .remove(topFragment)
-                        .commit();
-            }
+        if (childFragmentManager.getFragments().size() == 1) {
+            super.onBackPressed();
+            return;
         }
+        Fragment topFragment = childFragmentManager.getFragments().get(childFragmentManager.getFragments().size() - 1);
+        childFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_left, R.anim.exit_to_right)
+                .hide(topFragment)
+                .commitNow();
+        childFragmentManager.beginTransaction()
+                .remove(topFragment)
+                .commit();
     }
 }

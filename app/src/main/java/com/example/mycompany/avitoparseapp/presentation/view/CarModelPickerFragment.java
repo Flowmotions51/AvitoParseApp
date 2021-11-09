@@ -39,10 +39,8 @@ public class CarModelPickerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(carModels == null && getArguments() != null) {
-            brand = getArguments().getString("Brand");
-            carModels = getModelsOfBrand(brand);
-        }
+        brand = getArguments().getString("Brand");
+        carModels = getModelsOfBrand(brand);
         CarModelAdapter adapter = new CarModelAdapter(carModels);
         adapter.setAction(new IOnItemTextAction() {
             @Override
