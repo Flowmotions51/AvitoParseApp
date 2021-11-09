@@ -40,6 +40,7 @@ public class CarBrandPickerFragment extends Fragment {
         carBrands.add("Audi");
         carBrands.add("Toyota");
         carBrands.add("BMW");
+        carBrands.add("vaz_lada");
         CarModelAdapter adapter = new CarModelAdapter(carBrands);
         adapter.setAction(new IOnItemTextAction() {
             @Override

@@ -31,15 +31,15 @@ public class MainContainerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Parser parser = new Parser();
-        ParserRepository parserRepository = new ParserRepository(parser);
-        avitoParseViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
-            @NonNull
-            @Override
-            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) new AvitoParseViewModel(parserRepository);
-            }
-        }).get(AvitoParseViewModel.class);
+//        Parser parser = new Parser();
+//        ParserRepository parserRepository = new ParserRepository(parser);
+//        avitoParseViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+//            @NonNull
+//            @Override
+//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+//                return (T) new AvitoParseViewModel(parserRepository);
+//            }
+//        }).get(AvitoParseViewModel.class);
         Bundle bundle = new Bundle();
         bundle.putInt("BackStackNumber", 1);
         bundle.putString("BackStackTag", "BackStackNumber1");

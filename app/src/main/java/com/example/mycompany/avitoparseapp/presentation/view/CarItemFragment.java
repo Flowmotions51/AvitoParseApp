@@ -5,13 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.databinding.CarItemFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
@@ -40,13 +38,14 @@ public class CarItemFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         CarCell carCell = (CarCell) getArguments().get("CarCell");
-        avitoParseViewModel = new ViewModelProvider(getParentFragment()).get(AvitoParseViewModel.class);
+        mBinding.addItemToFavoritesBtn.setOnClickListener(v -> {
+            avitoParseViewModel.addCarToFavorites(carCell);
+        });
+        avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
         avitoParseViewModel.resetLiveDataCarItem();
         avitoParseViewModel.getCarData().observe(getViewLifecycleOwner(), this::carInfoReceived);
         avitoParseViewModel.getIsInProgress().observe(getViewLifecycleOwner(), this::isProgressVisible);
-
         carItemPhotosAdapter = new CarItemPhotosAdapter();
-
         avitoParseViewModel.loadCarDataSync(carCell);
     }
 

@@ -19,12 +19,13 @@ public class Parser {
 
     public List<CarCell> getCarCells(String params) {
         try {
-            doc = Jsoup.connect("https://www.avito.ru/moskva_i_mo/avtomobili/" + params.toLowerCase()).get();
+            doc = Jsoup.connect("https://www.avito.ru/moskva_i_mo/avtomobili/" + params.toLowerCase() + "?cd=1&s=104").get();
             Elements elements = doc.select("[data-marker=item]");
             int listSize = doc.select("[data-marker=item]").size();
             carCells = new ArrayList<>();
             for (int i = 0; i < listSize; i++) {
                 String previewImageHref;
+                String firstImageHref;
                 String itemName;
                 String link;
                 if (elements.get(i).children().size() > 1) {
@@ -43,7 +44,7 @@ public class Parser {
                     link = "https://www.avito.ru"
                             + elements.get(i).child(0).child(0).child(0).attr("href");
                 }
-                carCells.add(new CarCell(previewImageHref, link, itemName));
+                carCells.add(new CarCell(previewImageHref, "", link, itemName));
             }
         } catch (IOException exception) {
             exception.getMessage();

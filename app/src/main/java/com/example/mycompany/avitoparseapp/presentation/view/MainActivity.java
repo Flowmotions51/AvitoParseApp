@@ -7,32 +7,42 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mycompany.avitoparseapp.R;
+import com.example.mycompany.avitoparseapp.data.parser.Parser;
+import com.example.mycompany.avitoparseapp.data.repository.ParserRepository;
 import com.example.mycompany.avitoparseapp.databinding.ActivityMainBinding;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private ViewPager2 viewPager2;
-    private MyPagerAdapter myPagerAdapter;
+    private ViewPagerAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
+        Parser parser = new Parser();
+        ParserRepository parserRepository = new ParserRepository(parser);
+        avitoParseViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+            @NonNull
+            @Override
+            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                return (T) new AvitoParseViewModel(parserRepository);
+            }
+        }).get(AvitoParseViewModel.class);
         viewPager2 = mBinding.viewPager;
-        myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), getLifecycle());
-        viewPager2.setAdapter(myPagerAdapter);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle());
+        viewPager2.setAdapter(viewPagerAdapter);
 
         TabLayoutMediator tabLayoutMediator =
                 new TabLayoutMediator(mBinding.tabLayout, mBinding.viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -51,10 +61,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayoutMediator.attach();
     }
 
+    private class ViewPagerAdapter extends FragmentStateAdapter {
 
-    private class MyPagerAdapter extends FragmentStateAdapter {
-
-        public MyPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+        public ViewPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
         }
 
@@ -65,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return MainContainerFragment.newInstance();
                 case 1:
-                    return FavoritesFragment.newInstance();
+                    return MainContainerFragment2.newInstance();
                 default:
                     return null;
             }
@@ -83,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 .findFragmentByTag("f" + viewPager2.getCurrentItem());
         FragmentManager childFragmentManager = currentViewpagerFragment.getChildFragmentManager();
         if (childFragmentManager.getFragments().size() == 1) {
-            super.onBackPressed();
+            //super.onBackPressed();
             return;
         }
         Fragment topFragment = childFragmentManager.getFragments().get(childFragmentManager.getFragments().size() - 1);

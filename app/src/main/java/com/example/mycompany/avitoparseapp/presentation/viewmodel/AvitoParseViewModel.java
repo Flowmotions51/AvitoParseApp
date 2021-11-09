@@ -8,8 +8,13 @@ import com.example.mycompany.avitoparseapp.data.repository.ParserRepository;
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
+import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -18,6 +23,9 @@ public class AvitoParseViewModel extends ViewModel {
     private ParserRepository parserRepository;
     private MutableLiveData<Boolean> isInProgress = new MutableLiveData<>();
     private MutableLiveData<List<CarCell>> carCellsData = new MutableLiveData<>();
+
+    private List<CarCell> carFavoritesCell = new ArrayList<>();
+    private MutableLiveData<List<CarCell>> carFavoritesCellsData = new MutableLiveData<>();
 
     private MutableLiveData<Car> carData = new MutableLiveData<>();
     private Disposable mDisposable;
@@ -30,10 +38,10 @@ public class AvitoParseViewModel extends ViewModel {
      * Метод для получения списка объявлений автомобилей на основе переданных параметров
      * @param params - параметры для объявлений (марка, модель и тд).
      */
-    public void loadCellsData(String params) {
+    public void loadCellsData(String params, boolean isProgressBarShowed) {
         mDisposable = parserRepository.loadCarCellsAsyncRx(params)
                 .doOnSubscribe(disposable -> {
-                    isInProgress.postValue(true);
+                    isInProgress.postValue(isProgressBarShowed);
                 })
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -54,6 +62,21 @@ public class AvitoParseViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterTerminate(() -> isInProgress.postValue(false))
                 .subscribe(carData::setValue, error -> System.out.println(error.getLocalizedMessage()));
+    }
+
+    public void loadCarFav() {
+        carFavoritesCellsData.setValue(carFavoritesCell);
+        isInProgress.setValue(false);
+    }
+
+    public void addCarToFavorites(CarCell carCell) {
+        if(!carFavoritesCell.contains(carCell)) {
+            carFavoritesCell.add(carCell);
+            carFavoritesCellsData.postValue(carFavoritesCell);
+        } else {
+            carFavoritesCell.remove(carCell);
+            carFavoritesCellsData.postValue(carFavoritesCell);
+        }
     }
 
     @Override
@@ -97,6 +120,14 @@ public class AvitoParseViewModel extends ViewModel {
      */
     public LiveData<Car> getCarData() {
         return carData;
+    }
+
+    /**
+     * Getter LiveData<List<CarCell>></> для подписки
+     * @return LiveData<List<CarCell>>
+     */
+    public LiveData<List<CarCell>> getCarFavoritesCellsData() {
+        return carFavoritesCellsData;
     }
 
 }

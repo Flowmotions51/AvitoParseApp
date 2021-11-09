@@ -62,6 +62,16 @@ public class CarModelPickerFragment extends Fragment {
     public List<String> getModelsOfBrand(String brand) {
         List<String> brandModels = new ArrayList<>();
         switch (brand) {
+            case "vaz_lada/": {
+                brandModels.add("2101");
+                brandModels.add("2107");
+                brandModels.add("2109");
+                brandModels.add("2114_samara");
+                brandModels.add("Vesta");
+                brandModels.add("Priora");
+                brandModels.add("Kalina");
+                break;
+            }
             case "Audi/": {
                 brandModels.add("A1");
                 brandModels.add("A3");
