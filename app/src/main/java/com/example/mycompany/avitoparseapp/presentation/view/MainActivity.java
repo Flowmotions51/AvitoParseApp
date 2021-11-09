@@ -37,16 +37,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-//        Parser parser = new Parser();
-//        ParserRepository parserRepository = new ParserRepository(parser);
-//        avitoParseViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
-//            @NonNull
-//            @Override
-//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                return (T) new AvitoParseViewModel(parserRepository);
-//            }
-//        }).get(AvitoParseViewModel.class);
-
         viewPager2 = mBinding.viewPager;
         myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), getLifecycle());
         viewPager2.setAdapter(myPagerAdapter);
