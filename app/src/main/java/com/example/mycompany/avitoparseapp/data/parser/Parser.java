@@ -28,10 +28,15 @@ public class Parser {
                 String itemName;
                 String link;
                 if (elements.get(i).children().size() > 1) {
-                    previewImageHref = elements.get(i).child(1).child(0).child(0).child(0).child(0).child(0).child(0).attr("data-marker").substring(19);
-                    itemName = elements.get(i).child(1).child(1).child(1).child(0).child(0).html();
-                    link = "https://www.avito.ru"
-                            + elements.get(i).child(1).child(0).child(0).attr("href");
+                    Element previewImagePlaceHolder = elements.get(i).child(1).child(0).child(0).child(0).child(0).child(0).child(0);
+                    if(!previewImagePlaceHolder.html().equals("")) {
+                        previewImageHref = previewImagePlaceHolder.attr("data-marker").substring(19);
+                        itemName = elements.get(i).child(1).child(1).child(1).child(0).child(0).html();
+                        link = "https://www.avito.ru"
+                                + elements.get(i).child(1).child(0).child(0).attr("href");
+                    } else {
+                        continue;
+                    }
                 } else {
                     previewImageHref = elements.get(i).child(0).child(0).child(0).child(0).child(0).child(0).child(0).attr("data-marker").substring(19);
                     itemName = elements.get(i).child(0).child(1).child(1).child(0).child(0).html();

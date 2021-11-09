@@ -7,9 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".presentation.view.MainActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/main_container"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="50dp"
+        android:text="TextView" />
+
+    <androidx.viewpager2.widget.ViewPager2
+
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.viewpager2.widget.ViewPager2>
 
 </LinearLayout>

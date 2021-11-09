@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycompany.avitoparseapp.IOnCarCellAction;
+import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.databinding.CarCellsFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarCellsAdapter;
@@ -52,12 +54,13 @@ public class CarCellsFragment extends Fragment {
                 CarItemFragment carItemFragment = new CarItemFragment();
                 carItemFragment.setArguments(bundle);
                 CarCellsFragment.this.getParentFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                         .addToBackStack("CarItemFragment")
-                        .add(container.getId(), carItemFragment)
+                        .add(container.getId(), carItemFragment, getTag())
                         .commit();
             }
         });
-        avitoParseViewModel = new ViewModelProvider(requireActivity()).get(AvitoParseViewModel.class);
+        avitoParseViewModel = new ViewModelProvider(getParentFragment()).get(AvitoParseViewModel.class);
         avitoParseViewModel.getIsInProgress().observe(getViewLifecycleOwner(), this::isProgressVisible);
         avitoParseViewModel.resetLiveDataCarCells();
         avitoParseViewModel.getCarCellsData().observe(getViewLifecycleOwner(), this::showCars);

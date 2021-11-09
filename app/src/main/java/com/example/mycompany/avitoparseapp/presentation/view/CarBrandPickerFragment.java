@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.mycompany.avitoparseapp.IOnItemTextAction;
+import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.databinding.CarModelPickerFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarModelAdapter;
 
@@ -23,6 +24,7 @@ public class CarBrandPickerFragment extends Fragment {
     private CarModelPickerFragmentLayoutBinding mBinding;
     private ViewGroup container;
     private List<String> carBrands = new ArrayList<>();
+    private String backStackTag;
 
     @Nullable
     @Override
@@ -40,6 +42,8 @@ public class CarBrandPickerFragment extends Fragment {
         carBrands.add("Toyota");
         carBrands.add("BMW");
         CarModelAdapter adapter = new CarModelAdapter(carBrands);
+        if(getArguments() != null )
+            backStackTag = getArguments().getString("BackStackTag");
         adapter.setAction(new IOnItemTextAction() {
             @Override
             public void onAction(String brand) {
@@ -48,8 +52,9 @@ public class CarBrandPickerFragment extends Fragment {
                 CarModelPickerFragment carModelPickerFragment = new CarModelPickerFragment();
                 carModelPickerFragment.setArguments(bundle);
                 CarBrandPickerFragment.this.getParentFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                         .addToBackStack("CarModelPickerFragment")
-                        .add(container.getId(), carModelPickerFragment)
+                        .add(container.getId(), carModelPickerFragment, backStackTag)
                         .commit();
             }
         });

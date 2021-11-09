@@ -71,6 +71,10 @@ public class AvitoParseViewModel extends ViewModel {
         this.carCellsData = new MutableLiveData<>();
     }
 
+    public void resetLiveDataCarItem() {
+        this.carData = new MutableLiveData<>();
+    }
+
     /**
      * Getter LiveData<Boolean></> для подписки
      * @return LiveData<Boolean>
