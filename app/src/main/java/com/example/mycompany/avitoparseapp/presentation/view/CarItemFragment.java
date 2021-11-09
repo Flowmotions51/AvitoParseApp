@@ -17,6 +17,7 @@ import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarItemPhot
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 
 public class CarItemFragment extends Fragment {
+    private static final String CAR_CELL_PARAM = "CarCell";
     private CarItemFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private CarItemPhotosAdapter carItemPhotosAdapter;
@@ -42,11 +43,10 @@ public class CarItemFragment extends Fragment {
             avitoParseViewModel.addCarToFavorites(carCell);
         });
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
-        avitoParseViewModel.resetLiveDataCarItem();
         avitoParseViewModel.getCarData().observe(getViewLifecycleOwner(), this::carInfoReceived);
-        avitoParseViewModel.getIsInProgress().observe(getViewLifecycleOwner(), this::isProgressVisible);
+        avitoParseViewModel.getIsInProgress2().observe(getViewLifecycleOwner(), this::isProgressVisible);
         carItemPhotosAdapter = new CarItemPhotosAdapter();
-        avitoParseViewModel.loadCarDataSync(carCell);
+        avitoParseViewModel.loadCarData(carCell);
     }
 
     public void carInfoReceived(Car car) {
@@ -54,6 +54,14 @@ public class CarItemFragment extends Fragment {
         mBinding.recyclerView.setAdapter(carItemPhotosAdapter);
         mBinding.itemName.setText(car.getCarName());
         mBinding.carDescription.setText(car.getCarDescription());
+    }
+
+    public static CarItemFragment newInstance(CarCell carCell) {
+        CarItemFragment fragment = new CarItemFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(CAR_CELL_PARAM, carCell);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     private void isProgressVisible(Boolean isVisible) {

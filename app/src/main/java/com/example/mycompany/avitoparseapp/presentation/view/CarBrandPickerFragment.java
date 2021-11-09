@@ -15,6 +15,7 @@ import com.example.mycompany.avitoparseapp.databinding.CarModelPickerFragmentLay
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarModelAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,7 +24,11 @@ import java.util.List;
 public class CarBrandPickerFragment extends Fragment {
     private CarModelPickerFragmentLayoutBinding mBinding;
     private ViewGroup container;
-    private List<String> carBrands = new ArrayList<>();
+    private List<String> carBrands = new ArrayList<>(
+            Arrays.asList(
+                 "Audi", "Toyota", "BMW", "vaz_lada"
+            )
+    );
 
     @Nullable
     @Override
@@ -37,25 +42,18 @@ public class CarBrandPickerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        carBrands.add("Audi");
-        carBrands.add("Toyota");
-        carBrands.add("BMW");
-        carBrands.add("vaz_lada");
+//        carBrands.add("Audi");
+//        carBrands.add("Toyota");
+//        carBrands.add("BMW");
+//        carBrands.add("vaz_lada");
         CarModelAdapter adapter = new CarModelAdapter(carBrands);
-        adapter.setAction(new IOnItemTextAction() {
-            @Override
-            public void onAction(String brand) {
-                Bundle bundle = new Bundle();
-                bundle.putString("Brand", brand + "/");
-                CarModelPickerFragment carModelPickerFragment = new CarModelPickerFragment();
-                carModelPickerFragment.setArguments(bundle);
-                CarBrandPickerFragment.this.getParentFragmentManager().beginTransaction()
+        adapter.setAction(brand ->
+                CarBrandPickerFragment.this.getParentFragmentManager()
+                        .beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                         .addToBackStack("CarModelPickerFragment")
-                        .add(container.getId(), carModelPickerFragment)
-                        .commit();
-            }
-        });
+                        .add(container.getId(), CarModelPickerFragment.newInstance(brand))
+                        .commit());
         mBinding.recyclerView.setAdapter(adapter);
     }
 }

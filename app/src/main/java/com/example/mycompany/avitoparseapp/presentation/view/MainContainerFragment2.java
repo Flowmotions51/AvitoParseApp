@@ -10,12 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.mycompany.avitoparseapp.databinding.MainContainerFavoritesFragmentLayoutBinding;
-import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 
 public class MainContainerFragment2 extends Fragment {
-
     private MainContainerFavoritesFragmentLayoutBinding mBinding;
-    private AvitoParseViewModel avitoParseViewModel;
 
     @Nullable
     @Override

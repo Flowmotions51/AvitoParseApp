@@ -16,6 +16,7 @@ import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.data.parser.Parser;
 import com.example.mycompany.avitoparseapp.data.repository.ParserRepository;
 import com.example.mycompany.avitoparseapp.databinding.ActivityMainBinding;
+import com.example.mycompany.avitoparseapp.presentation.view.adapter.ViewPagerAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -59,31 +60,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         tabLayoutMediator.attach();
-    }
-
-    private class ViewPagerAdapter extends FragmentStateAdapter {
-
-        public ViewPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
-            super(fragmentManager, lifecycle);
-        }
-
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            switch (position) {
-                case 0:
-                    return MainContainerFragment.newInstance();
-                case 1:
-                    return MainContainerFragment2.newInstance();
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return 2;
-        }
     }
 
     @Override

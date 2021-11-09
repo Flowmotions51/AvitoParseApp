@@ -18,6 +18,7 @@ public class Parser {
     private List<CarCell> carCells;
 
     public List<CarCell> getCarCells(String params) {
+        if(carCells != null) carCells.clear();
         try {
             doc = Jsoup.connect("https://www.avito.ru/moskva_i_mo/avtomobili/" + params.toLowerCase() + "?cd=1&s=104").get();
             Elements elements = doc.select("[data-marker=item]");
@@ -48,6 +49,7 @@ public class Parser {
             }
         } catch (IOException exception) {
             exception.getMessage();
+            carCells = null;
         }
         return carCells;
     }

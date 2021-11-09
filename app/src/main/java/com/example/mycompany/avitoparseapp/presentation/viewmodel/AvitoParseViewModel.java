@@ -9,12 +9,8 @@ import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
-import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -22,6 +18,18 @@ import io.reactivex.schedulers.Schedulers;
 public class AvitoParseViewModel extends ViewModel {
     private ParserRepository parserRepository;
     private MutableLiveData<Boolean> isInProgress = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> getIsError() {
+        return isError;
+    }
+
+    private MutableLiveData<Boolean> isError = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> getIsInProgress2() {
+        return isInProgress2;
+    }
+
+    private MutableLiveData<Boolean> isInProgress2 = new MutableLiveData<>();
     private MutableLiveData<List<CarCell>> carCellsData = new MutableLiveData<>();
 
     private List<CarCell> carFavoritesCell = new ArrayList<>();
@@ -39,28 +47,25 @@ public class AvitoParseViewModel extends ViewModel {
      * @param params - параметры для объявлений (марка, модель и тд).
      */
     public void loadCellsData(String params, boolean isProgressBarShowed) {
-        mDisposable = parserRepository.loadCarCellsAsyncRx(params)
-                .doOnSubscribe(disposable -> {
-                    isInProgress.postValue(isProgressBarShowed);
-                })
-                .subscribeOn(Schedulers.computation())
+        isError.setValue(false);
+        isInProgress.setValue(isProgressBarShowed);
+        mDisposable = parserRepository.loadCarCells(params)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doAfterTerminate(() -> isInProgress.postValue(false))
-                .subscribe(carCellsData::setValue, error -> System.out.println(error.getLocalizedMessage()));
+                .doAfterTerminate(() -> isInProgress.setValue(false))
+                .subscribe(carCellsData::setValue, e -> isError.setValue(true));
     }
 
     /**
      * Метод для получения полного объявления автомобиля на основе объекта CarCell
      * @param carCell - выбранное объявление из списка, который был получен в loadCellsData(String params)
      */
-    public void loadCarDataSync(CarCell carCell) {
-        mDisposable = parserRepository.loadCarItemAsyncRx(carCell)
-                .doOnSubscribe(disposable -> {
-                    isInProgress.postValue(true);
-                })
-                .subscribeOn(Schedulers.computation())
+    public void loadCarData(CarCell carCell) {
+        isInProgress2.setValue(true);
+        mDisposable = parserRepository.loadCarItem(carCell)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doAfterTerminate(() -> isInProgress.postValue(false))
+                .doAfterTerminate(() -> isInProgress2.setValue(false))
                 .subscribe(carData::setValue, error -> System.out.println(error.getLocalizedMessage()));
     }
 

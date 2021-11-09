@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +27,15 @@ import java.util.List;
  * Фрагмент для отображения объявлений, согласено выбранным параметрам
  */
 public class CarCellsFragment extends Fragment {
+    private static final String MODEL_PARAM = "Model";
     private CarCellsFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private CarCellsAdapter recyclerViewCarCellsAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ViewGroup container;
     private String carModel;
+    private AlertDialog.Builder builderDialog;
+    private AlertDialog alertDialog;
 
     @Nullable
     @Override
@@ -45,34 +49,40 @@ public class CarCellsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        swipeRefreshLayout = mBinding.swiperLayout;
-        recyclerViewCarCellsAdapter = new CarCellsAdapter();
-        recyclerViewCarCellsAdapter.setHelper(new IOnCarCellAction() {
-            @Override
-            public void action(CarCell carCell) {
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("CarCell", carCell);
-                CarItemFragment carItemFragment = new CarItemFragment();
-                carItemFragment.setArguments(bundle);
-                CarCellsFragment.this.getParentFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                        .addToBackStack("CarItemFragment")
-                        .add(container.getId(), carItemFragment, getTag())
-                        .commit();
-            }
-        });
-        avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
-        carModel = getArguments().getString("Model");
-        avitoParseViewModel.getIsInProgress().observe(getViewLifecycleOwner(), this::isProgressVisible);
-        avitoParseViewModel.resetLiveDataCarCells();
-        avitoParseViewModel.getCarCellsData().observe(getViewLifecycleOwner(), this::showCars);
-        avitoParseViewModel.loadCellsData(carModel, true);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                avitoParseViewModel.loadCellsData(carModel, false);
-            }
-        });
+        if(savedInstanceState == null) {
+            swipeRefreshLayout = mBinding.swiperLayout;
+            recyclerViewCarCellsAdapter = new CarCellsAdapter();
+            recyclerViewCarCellsAdapter.setHelper(carCell ->
+                    CarCellsFragment.this
+                            .getParentFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                            .addToBackStack("CarItemFragment")
+                            .add(container.getId(), CarItemFragment.newInstance(carCell), getTag())
+                            .commit()
+            );
+            avitoParseViewModel = new ViewModelProvider(this.getActivity()).get(AvitoParseViewModel.class);
+            carModel = getArguments().getString("Model");
+            avitoParseViewModel.getIsInProgress().observe(this.getActivity(), this::isProgressVisible);
+            avitoParseViewModel.getCarCellsData().observe(this.getActivity(), this::showCars);
+
+            avitoParseViewModel.getIsError().observe(this.getActivity(), this::showErrorDialog);
+
+            avitoParseViewModel.loadCellsData(carModel, true);
+            swipeRefreshLayout.setOnRefreshListener(() ->
+                    avitoParseViewModel.loadCellsData(carModel, false));
+        }
+    }
+
+    private void showErrorDialog(Boolean aBoolean) {
+        mBinding.errorLayout.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+    }
+
+    public static CarCellsFragment newInstance(String model) {
+        CarCellsFragment fragment = new CarCellsFragment();
+        Bundle args = new Bundle();
+        args.putString(MODEL_PARAM, model);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     private void isProgressVisible(Boolean isVisible) {
@@ -88,6 +98,6 @@ public class CarCellsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        avitoParseViewModel.getCarCellsData().removeObservers(getViewLifecycleOwner());
+        //avitoParseViewModel.getCarCellsData().removeObservers(this.getActivity());
     }
 }

@@ -16,11 +16,11 @@ public class ParserRepository {
         this.parser = parser;
     }
 
-    public Single<List<CarCell>> loadCarCellsAsyncRx(String params) {
+    public Single<List<CarCell>> loadCarCells(String params) {
         return Single.fromCallable(() -> parser.getCarCells(params));
     }
 
-    public Single<Car> loadCarItemAsyncRx(CarCell carCell) {
+    public Single<Car> loadCarItem(CarCell carCell) {
         return Single.fromCallable(() -> parser.getCarInfo(carCell));
     }
 }

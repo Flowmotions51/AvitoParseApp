@@ -7,11 +7,32 @@
     android:clickable="true">
 
     <RelativeLayout
+        android:id="@+id/errorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:translationZ="92dp"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <TextView
+            android:background="@android:color/holo_red_dark"
+            android:gravity="center"
+            android:id="@+id/errorText"
+            android:textSize="20sp"
+            android:text="Error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/progressframelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:clickable="true"
+        android:translationZ="90dp"
         android:focusable="true"
         android:visibility="visible">
 

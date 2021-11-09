@@ -21,10 +21,10 @@ import java.util.List;
  * Фрагмент для выбора модели автомобиля
  */
 public class CarModelPickerFragment extends Fragment {
+    private static final String BRAND_PARAM = "Brand";
     private CarModelPickerFragmentLayoutBinding mBinding;
     private ViewGroup container;
     private List<String> carModels;
-    private int backStackNumber;
     private String brand;
 
     @Nullable
@@ -42,21 +42,21 @@ public class CarModelPickerFragment extends Fragment {
         brand = getArguments().getString("Brand");
         carModels = getModelsOfBrand(brand);
         CarModelAdapter adapter = new CarModelAdapter(carModels);
-        adapter.setAction(new IOnItemTextAction() {
-            @Override
-            public void onAction(String model) {
-                Bundle bundle = new Bundle();
-                bundle.putString("Model", brand + model);
-                CarCellsFragment carCellsFragment = new CarCellsFragment();
-                carCellsFragment.setArguments(bundle);
-                CarModelPickerFragment.this.getParentFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                        .addToBackStack("CarCellsFragment")
-                        .add(container.getId(), carCellsFragment, getTag())
-                        .commit();
-            }
-        });
+        adapter.setAction(model -> CarModelPickerFragment.this.getParentFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                .addToBackStack("CarCellsFragment")
+                .add(container.getId(), CarCellsFragment.newInstance(brand + model), getTag())
+                .commit());
         mBinding.recyclerView.setAdapter(adapter);
+    }
+
+    public static CarModelPickerFragment newInstance(String brand) {
+        CarModelPickerFragment fragment = new CarModelPickerFragment();
+        Bundle args = new Bundle();
+        args.putString(BRAND_PARAM, brand + "/");
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public List<String> getModelsOfBrand(String brand) {
