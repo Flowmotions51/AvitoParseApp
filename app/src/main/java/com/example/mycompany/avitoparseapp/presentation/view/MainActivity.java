@@ -6,23 +6,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mycompany.avitoparseapp.R;
-import com.example.mycompany.avitoparseapp.data.parser.Parser;
-import com.example.mycompany.avitoparseapp.data.repository.ParserRepository;
 import com.example.mycompany.avitoparseapp.databinding.ActivityMainBinding;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,14 +79,8 @@ public class MainActivity extends AppCompatActivity {
                 .findFragmentByTag("f" + viewPager2.getCurrentItem());
         FragmentManager childFragmentManager = currentViewpagerFragment.getChildFragmentManager();
         if (currentViewpagerFragment instanceof MainContainerFragment) {
-            List<Fragment> fragmentList = childFragmentManager.getFragments();
-            System.out.println("1");
-            List<Fragment> firstStackFragments = fragmentList
-                    .stream()
-                    .filter(x -> x.getTag() != null && x.getTag().equals("BackStackNumber1"))
-                    .collect(Collectors.toList());
-            if (firstStackFragments.size() == 0) return;
-            Fragment topFragment = firstStackFragments.get(firstStackFragments.size() - 1);
+            if (childFragmentManager.getFragments().size() == 0) return;
+            Fragment topFragment = childFragmentManager.getFragments().get(childFragmentManager.getFragments().size() - 1);
             if(!(topFragment instanceof CarBrandPickerFragment)) {
                 childFragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_left, R.anim.exit_to_right)
@@ -104,14 +91,8 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
             }
         } else if (currentViewpagerFragment instanceof FavoritesFragment) {
-            List<Fragment> fragmentList = childFragmentManager.getFragments();
-            System.out.println("2");
-            List<Fragment> secondStackFragments = fragmentList
-                    .stream()
-                    .filter(x -> x.getTag() != null && x.getTag().equals("BackStackNumber2"))
-                    .collect(Collectors.toList());
-            if (secondStackFragments.size() == 0) return;
-            Fragment topFragment = secondStackFragments.get(secondStackFragments.size() - 1);
+            if (childFragmentManager.getFragments().size() == 0) return;
+            Fragment topFragment = childFragmentManager.getFragments().get(childFragmentManager.getFragments().size() - 1);
             if(!(topFragment instanceof CarBrandPickerFragment)) {
                 childFragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_left, R.anim.exit_to_right)
