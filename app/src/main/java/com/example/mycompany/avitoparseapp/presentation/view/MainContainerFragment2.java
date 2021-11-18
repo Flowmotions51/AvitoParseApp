@@ -25,10 +25,12 @@ public class MainContainerFragment2 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getChildFragmentManager().beginTransaction()
-                .addToBackStack("CarBrandPickerFragment2")
-                .add(mBinding.containerFavorites.getId(), new CarFavoritesFragment())
-                .commit();
+        if (savedInstanceState == null) {
+            getChildFragmentManager().beginTransaction()
+                    .addToBackStack("CarBrandPickerFragment2")
+                    .add(mBinding.containerFavorites.getId(), new CarFavoritesFragment())
+                    .commit();
+        }
     }
 
     public static MainContainerFragment2 newInstance() {

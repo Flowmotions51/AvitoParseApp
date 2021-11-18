@@ -17,25 +17,23 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AvitoParseViewModel extends ViewModel {
     private ParserRepository parserRepository;
-    private MutableLiveData<Boolean> isInProgress = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> getIsError() {
-        return isError;
-    }
-
-    private MutableLiveData<Boolean> isError = new MutableLiveData<>();
-
-    public MutableLiveData<Boolean> getIsInProgress2() {
-        return isInProgress2;
-    }
-
-    private MutableLiveData<Boolean> isInProgress2 = new MutableLiveData<>();
     private MutableLiveData<List<CarCell>> carCellsData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isInProgressCellsLoading = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isErrorAtCellsLoading = new MutableLiveData<>();
 
-    private List<CarCell> carFavoritesCell = new ArrayList<>();
+    private MutableLiveData<Car> carItemData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isInProgressItemLoading = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isErrorAtItemLoading = new MutableLiveData<>();
+
+    private MutableLiveData<Car> carItemDataFavorites = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isErrorAtFavoriteItemLoading = new MutableLiveData<>();
+
+    private List<CarCell> carCellsFavorites = new ArrayList<>();
     private MutableLiveData<List<CarCell>> carFavoritesCellsData = new MutableLiveData<>();
 
-    private MutableLiveData<Car> carData = new MutableLiveData<>();
+
+
     private Disposable mDisposable;
 
     public AvitoParseViewModel(ParserRepository parserRepository) {
@@ -47,13 +45,13 @@ public class AvitoParseViewModel extends ViewModel {
      * @param params - параметры для объявлений (марка, модель и тд).
      */
     public void loadCellsData(String params, boolean isProgressBarShowed) {
-        isError.setValue(false);
-        isInProgress.setValue(isProgressBarShowed);
+        isErrorAtCellsLoading.setValue(false);
+        isInProgressCellsLoading.setValue(isProgressBarShowed);
         mDisposable = parserRepository.loadCarCells(params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doAfterTerminate(() -> isInProgress.setValue(false))
-                .subscribe(carCellsData::setValue, e -> isError.setValue(true));
+                .doAfterTerminate(() -> isInProgressCellsLoading.setValue(false))
+                .subscribe(carCellsData::setValue, e -> isErrorAtCellsLoading.setValue(true));
     }
 
     /**
@@ -61,26 +59,41 @@ public class AvitoParseViewModel extends ViewModel {
      * @param carCell - выбранное объявление из списка, который был получен в loadCellsData(String params)
      */
     public void loadCarData(CarCell carCell) {
-        isInProgress2.setValue(true);
+        isErrorAtItemLoading.setValue(false);
+        isInProgressItemLoading.setValue(true);
         mDisposable = parserRepository.loadCarItem(carCell)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doAfterTerminate(() -> isInProgress2.setValue(false))
-                .subscribe(carData::setValue, error -> System.out.println(error.getLocalizedMessage()));
+                .doAfterTerminate(() -> isInProgressItemLoading.setValue(false))
+                .subscribe(carItemData::setValue, error -> isErrorAtItemLoading.setValue(true));
+    }
+
+    /**
+     * Метод для получения полного объявления автомобиля на основе объекта CarCell
+     * @param carCell - выбранное объявление из списка, который был получен в loadCellsData(String params)
+     */
+    public void loadCarFavData(CarCell carCell) {
+        isErrorAtFavoriteItemLoading.setValue(false);
+        isInProgressItemLoading.setValue(true);
+        mDisposable = parserRepository.loadCarItem(carCell)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doAfterTerminate(() -> isInProgressItemLoading.setValue(false))
+                .subscribe(carItemDataFavorites::setValue, error -> isErrorAtFavoriteItemLoading.setValue(true));
     }
 
     public void loadCarFav() {
-        carFavoritesCellsData.setValue(carFavoritesCell);
-        isInProgress.setValue(false);
+        carFavoritesCellsData.setValue(carCellsFavorites);
+        isInProgressCellsLoading.setValue(false);
     }
 
     public void addCarToFavorites(CarCell carCell) {
-        if(!carFavoritesCell.contains(carCell)) {
-            carFavoritesCell.add(carCell);
-            carFavoritesCellsData.postValue(carFavoritesCell);
+        if(!carCellsFavorites.contains(carCell)) {
+            carCellsFavorites.add(carCell);
+            carFavoritesCellsData.postValue(carCellsFavorites);
         } else {
-            carFavoritesCell.remove(carCell);
-            carFavoritesCellsData.postValue(carFavoritesCell);
+            carCellsFavorites.remove(carCell);
+            carFavoritesCellsData.postValue(carCellsFavorites);
         }
     }
 
@@ -93,22 +106,21 @@ public class AvitoParseViewModel extends ViewModel {
         }
     }
 
-
     //todo Без этого метода возникает дефект при открытии во второй раз CarCellsFragment
     public void resetLiveDataCarCells() {
         this.carCellsData = new MutableLiveData<>();
     }
 
     public void resetLiveDataCarItem() {
-        this.carData = new MutableLiveData<>();
+        this.carItemData = new MutableLiveData<>();
     }
 
     /**
      * Getter LiveData<Boolean></> для подписки
      * @return LiveData<Boolean>
      */
-    public LiveData<Boolean> getIsInProgress() {
-        return isInProgress;
+    public LiveData<Boolean> getIsInProgressCellsLoading() {
+        return isInProgressCellsLoading;
     }
 
     /**
@@ -123,8 +135,8 @@ public class AvitoParseViewModel extends ViewModel {
      * Getter LiveData<Car></> для подписки
      * @return LiveData<Car>
      */
-    public LiveData<Car> getCarData() {
-        return carData;
+    public LiveData<Car> getCarItemData() {
+        return carItemData;
     }
 
     /**
@@ -133,6 +145,26 @@ public class AvitoParseViewModel extends ViewModel {
      */
     public LiveData<List<CarCell>> getCarFavoritesCellsData() {
         return carFavoritesCellsData;
+    }
+
+    public LiveData<Car> getCarItemDataFavorites() {
+        return carItemDataFavorites;
+    }
+
+    public LiveData<Boolean> getIsErrorAtCellsLoading() {
+        return isErrorAtCellsLoading;
+    }
+
+    public LiveData<Boolean> getIsErrorAtItemLoading() {
+        return isErrorAtItemLoading;
+    }
+
+    public LiveData<Boolean> getIsErrorAtFavoriteItemLoading() {
+        return isErrorAtFavoriteItemLoading;
+    }
+
+    public MutableLiveData<Boolean> getIsInProgressItemLoading() {
+        return isInProgressItemLoading;
     }
 
 }

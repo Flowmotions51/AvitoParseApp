@@ -29,7 +29,7 @@ public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarIma
         this.carCells = carCells;
     }
 
-    public List<CarCell> getImageUris() {
+    public List<CarCell> getCarCells() {
         return carCells;
     }
 

@@ -10,14 +10,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mycompany.avitoparseapp.databinding.CarItemFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
+import com.example.mycompany.avitoparseapp.databinding.CarItemFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarItemPhotosAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 
-public class CarItemFragment extends Fragment {
-    private static final String CAR_CELL_PARAM = "CarCell";
+public class CarItemFavoritesFragment extends Fragment {
+    private static final String CAR_CELL_PARAM = "CarCellFav";
     private CarItemFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private CarItemPhotosAdapter carItemPhotosAdapter;
@@ -38,21 +38,20 @@ public class CarItemFragment extends Fragment {
         return view;
     }
 
-    //todo implement saveInstanceState
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
         carItemPhotosAdapter = new CarItemPhotosAdapter();
-        if(savedInstanceState == null) {
-            carCell = (CarCell) getArguments().get("CarCell");
-            avitoParseViewModel.getIsErrorAtItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
-            avitoParseViewModel.getCarItemData().observe(getViewLifecycleOwner(), this::carInfoReceived);
+        avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
+        if (savedInstanceState == null) {
+            carCell = (CarCell) getArguments().get("CarCellFav");
+            avitoParseViewModel.getIsErrorAtFavoriteItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
+            avitoParseViewModel.getCarItemDataFavorites().observe(getViewLifecycleOwner(), this::carInfoReceived);
             avitoParseViewModel.getIsInProgressItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
-            avitoParseViewModel.loadCarData(carCell);
+            avitoParseViewModel.loadCarFavData(carCell);
         } else {
-            carCell = (CarCell) savedInstanceState.getParcelable("CarCell");
-            car = (Car)savedInstanceState.getParcelable("CarItem");
+            carCell = (CarCell) savedInstanceState.getParcelable("CarCellFav");
+            car = (Car) savedInstanceState.getParcelable("CarItemFav");
             carItemPhotosAdapter.setPhotoLinks(car.getPhotoLinks());
             mBinding.recyclerView.setAdapter(carItemPhotosAdapter);
             mBinding.itemName.setText(car.getCarName());
@@ -68,8 +67,8 @@ public class CarItemFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("CarItem", car);
-        outState.putParcelable("CarCell", carCell);
+        outState.putParcelable("CarItemFav", car);
+        outState.putParcelable("CarCellFav", carCell);
     }
 
     public void carInfoReceived(Car car) {
@@ -81,25 +80,25 @@ public class CarItemFragment extends Fragment {
         mBinding.carDescription.setText(car.getCarDescription());
     }
 
-    public static CarItemFragment newInstance(CarCell carCell) {
-        CarItemFragment fragment = new CarItemFragment();
+    public static CarItemFavoritesFragment newInstance(CarCell carCell) {
+        CarItemFavoritesFragment fragment = new CarItemFavoritesFragment();
         Bundle args = new Bundle();
         args.putParcelable(CAR_CELL_PARAM, carCell);
         fragment.setArguments(args);
         return fragment;
     }
 
-    private void isProgressVisible(Boolean isVisible) {
-        mBinding.progressframelayoutCar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    }
-
     private void showErrorDialog(Boolean aBoolean) {
         mBinding.errorLayout.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+    }
+
+    private void isProgressVisible(Boolean isVisible) {
+        mBinding.progressframelayoutCar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //avitoParseViewModel.getCarItemData().removeObservers(getViewLifecycleOwner());
+//        avitoParseViewModel.getCarItemData().removeObservers(getViewLifecycleOwner());
     }
 }
