@@ -78,6 +78,6 @@ public class Parser {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-        return new Car(carCell.getCarName(), mainPhotoLink, telephonePhotoLink, photosLinks, carDescription);
+        return new Car(carCell.getCarName(), mainPhotoLink, telephonePhotoLink, photosLinks, carDescription, "phone");
     }
 }

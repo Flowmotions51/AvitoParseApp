@@ -9,19 +9,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.data.model.Brand;
-import com.example.mycompany.avitoparseapp.data.model.Model;
 import com.example.mycompany.avitoparseapp.databinding.ModelPickerItemLayoutBinding;
 import com.example.mycompany.avitoparseapp.utils.IOnItemTextAction;
 
 import java.util.List;
 
-public class CarModelAdapter extends RecyclerView.Adapter<CarModelAdapter.CarModelViewHolder> {
+public class CarBrandAdapter extends RecyclerView.Adapter<CarBrandAdapter.CarModelViewHolder> {
 
-    public void setModels(List<Model> models) {
+    public void setModels(List<Brand> models) {
         this.models = models;
     }
 
-    private List<Model> models;
+    private List<Brand> models;
     private IOnItemTextAction action;
 
     public void setAction(IOnItemTextAction action) {

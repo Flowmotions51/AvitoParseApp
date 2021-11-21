@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mycompany.avitoparseapp.IOnCarCellAction;
 import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.databinding.CarFavoritesFragmentLayoutBinding;
@@ -25,6 +24,10 @@ public class CarFavoritesFragment extends Fragment {
     private AvitoParseViewModel avitoParseViewModel;
     private CarCellsAdapter recyclerViewCarCellsAdapter;
     private ViewGroup container;
+
+    public static CarFavoritesFragment newInstance() {
+        return new CarFavoritesFragment();
+    }
 
     @Nullable
     @Override
@@ -67,11 +70,5 @@ public class CarFavoritesFragment extends Fragment {
         if(recyclerViewCarCellsAdapter != null) {
             outState.putParcelableArrayList("CarCellsFavoritesList", new ArrayList<>(recyclerViewCarCellsAdapter.getCarCells()));
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        avitoParseViewModel.getCarCellsData().removeObservers(getViewLifecycleOwner());
     }
 }

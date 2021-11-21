@@ -8,9 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mycompany.avitoparseapp.IOnItemTextAction;
+import com.example.mycompany.avitoparseapp.utils.IOnItemTextAction;
 import com.example.mycompany.avitoparseapp.R;
-import com.example.mycompany.avitoparseapp.databinding.ModelPickerItemLayoutBinding;
 import com.example.mycompany.avitoparseapp.databinding.PhotoCarLayoutBinding;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;

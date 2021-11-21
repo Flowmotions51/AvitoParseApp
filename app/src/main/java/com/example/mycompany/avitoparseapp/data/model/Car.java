@@ -12,15 +12,18 @@ public class Car implements Parcelable {
     private String telephonePhotoLink;
     private List<String> photoLinks;
 
+    private String phone;
+
     private String carDescription;
 
     public Car(String carName, String mainPhotoLink, String telephonePhotoLink, List<String> photoLinks,
-               String carDescription) {
+               String carDescription, String phone) {
         this.carName = carName;
         this.mainPhotoLink = mainPhotoLink;
         this.telephonePhotoLink = telephonePhotoLink;
         this.photoLinks = photoLinks;
         this.carDescription = carDescription;
+        this.phone = phone;
     }
 
     protected Car(Parcel in) {
@@ -50,6 +53,10 @@ public class Car implements Parcelable {
 
     public String getCarDescription() {
         return carDescription;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 
     public static final Creator<Car> CREATOR = new Creator<Car>() {

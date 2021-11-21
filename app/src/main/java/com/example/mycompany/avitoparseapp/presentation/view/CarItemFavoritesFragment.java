@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
+import com.example.mycompany.avitoparseapp.data.model.DataItem;
 import com.example.mycompany.avitoparseapp.databinding.CarItemFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarItemPhotosAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
@@ -21,7 +22,6 @@ public class CarItemFavoritesFragment extends Fragment {
     private CarItemFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private CarItemPhotosAdapter carItemPhotosAdapter;
-
     private CarCell carCell;
     private Car car;
 
@@ -47,8 +47,8 @@ public class CarItemFavoritesFragment extends Fragment {
             carCell = (CarCell) getArguments().get("CarCellFav");
             avitoParseViewModel.getIsErrorAtFavoriteItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
             avitoParseViewModel.getCarItemDataFavorites().observe(getViewLifecycleOwner(), this::carInfoReceived);
-            avitoParseViewModel.getIsInProgressItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
-            avitoParseViewModel.loadCarFavData(carCell);
+            avitoParseViewModel.getIsInProgressFavoriteItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
+            avitoParseViewModel.loadCarItemFavoriteData(carCell);
         } else {
             carCell = (CarCell) savedInstanceState.getParcelable("CarCellFav");
             car = (Car) savedInstanceState.getParcelable("CarItemFav");
@@ -88,17 +88,19 @@ public class CarItemFavoritesFragment extends Fragment {
         return fragment;
     }
 
+    public static CarItemFavoritesFragment newInstance(DataItem carCell) {
+        CarItemFavoritesFragment fragment = new CarItemFavoritesFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(CAR_CELL_PARAM, carCell);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     private void showErrorDialog(Boolean aBoolean) {
         mBinding.errorLayout.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
     }
 
     private void isProgressVisible(Boolean isVisible) {
         mBinding.progressframelayoutCar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-//        avitoParseViewModel.getCarItemData().removeObservers(getViewLifecycleOwner());
     }
 }

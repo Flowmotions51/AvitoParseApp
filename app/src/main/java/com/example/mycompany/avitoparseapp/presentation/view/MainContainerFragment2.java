@@ -28,7 +28,7 @@ public class MainContainerFragment2 extends Fragment {
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
                     .addToBackStack("CarBrandPickerFragment2")
-                    .add(mBinding.containerFavorites.getId(), new CarFavoritesFragment())
+                    .add(mBinding.containerFavorites.getId(), CarFavoritesFragment.newInstance())
                     .commit();
         }
     }

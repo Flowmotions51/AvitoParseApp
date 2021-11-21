@@ -8,27 +8,24 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mycompany.avitoparseapp.IOnItemTextAction;
 import com.example.mycompany.avitoparseapp.R;
+import com.example.mycompany.avitoparseapp.data.model.Brand;
 import com.example.mycompany.avitoparseapp.databinding.CarModelPickerFragmentLayoutBinding;
-import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarModelAdapter;
+import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarBrandAdapter;
+import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Фрагмент для выбора марки автомобиля
  */
 public class CarBrandPickerFragment extends Fragment {
+    private AvitoParseViewModel avitoParseViewModel;
     private CarModelPickerFragmentLayoutBinding mBinding;
     private ViewGroup container;
-    private List<String> carBrands = new ArrayList<>(
-            Arrays.asList(
-                 "Audi", "Toyota", "BMW", "vaz_lada"
-            )
-    );
+    private CarBrandAdapter adapter;
 
     @Nullable
     @Override
@@ -42,18 +39,31 @@ public class CarBrandPickerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        carBrands.add("Audi");
-//        carBrands.add("Toyota");
-//        carBrands.add("BMW");
-//        carBrands.add("vaz_lada");
-        CarModelAdapter adapter = new CarModelAdapter(carBrands);
-        adapter.setAction(brand ->
+        avitoParseViewModel = new ViewModelProvider(this.getActivity()).get(AvitoParseViewModel.class);
+        avitoParseViewModel.getIsInProgressBrandListLoading().observe(this.getActivity(), this::isProgressVisible);
+        avitoParseViewModel.getIsErrorAtBrandListLoading().observe(this.getActivity(), this::showErrorDialog);
+        avitoParseViewModel.getBrandListData().observe(this.getActivity(), this::showBrands);
+        adapter = new CarBrandAdapter();
+        adapter.setAction(brandModelsLink ->
                 CarBrandPickerFragment.this.getParentFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                         .addToBackStack("CarModelPickerFragment")
-                        .add(container.getId(), CarModelPickerFragment.newInstance(brand))
+                        .add(container.getId(), CarModelPickerFragment.newInstance(brandModelsLink))
                         .commit());
+        avitoParseViewModel.loadBrandsData();
+    }
+
+    private void showBrands(List<Brand> carBrands) {
+        adapter.setModels(carBrands);
         mBinding.recyclerView.setAdapter(adapter);
+    }
+
+    private void isProgressVisible(Boolean isVisible) {
+        mBinding.progressframelayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    private void showErrorDialog(Boolean aBoolean) {
+        mBinding.errorLayout.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
     }
 }

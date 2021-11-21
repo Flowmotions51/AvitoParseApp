@@ -1,4 +1,4 @@
-package com.example.mycompany.avitoparseapp;
+package com.example.mycompany.avitoparseapp.utils;
 
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 

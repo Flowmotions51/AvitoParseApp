@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mycompany.avitoparseapp.IOnItemTextAction;
 import com.example.mycompany.avitoparseapp.R;
+import com.example.mycompany.avitoparseapp.data.model.Model;
 import com.example.mycompany.avitoparseapp.databinding.CarModelPickerFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarModelAdapter;
+import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,10 +23,12 @@ import java.util.List;
  */
 public class CarModelPickerFragment extends Fragment {
     private static final String BRAND_PARAM = "Brand";
+    private AvitoParseViewModel avitoParseViewModel;
     private CarModelPickerFragmentLayoutBinding mBinding;
     private ViewGroup container;
     private List<String> carModels;
     private String brand;
+    private CarModelAdapter adapter;
 
     @Nullable
     @Override
@@ -39,67 +42,39 @@ public class CarModelPickerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        avitoParseViewModel = new ViewModelProvider(this.getActivity()).get(AvitoParseViewModel.class);
         brand = getArguments().getString("Brand");
-        carModels = getModelsOfBrand(brand);
-        CarModelAdapter adapter = new CarModelAdapter(carModels);
+        avitoParseViewModel.getIsInProgressModelsListLoading().observe(this.getActivity(), this::isProgressVisible);
+        avitoParseViewModel.getIsErrorAtModelsListLoading().observe(this.getActivity(), this::showErrorDialog);
+        avitoParseViewModel.getModelsListData().observe(this.getActivity(), this::showModels);
+        adapter = new CarModelAdapter();
+        avitoParseViewModel.loadModelsData(brand);
+    }
+
+    private void showModels(List<Model> carBrands) { adapter = new CarModelAdapter();
+        adapter.setModels(carBrands);
+        mBinding.recyclerView.setAdapter(adapter);
         adapter.setAction(model -> CarModelPickerFragment.this.getParentFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                 .addToBackStack("CarCellsFragment")
-                .add(container.getId(), CarCellsFragment.newInstance(brand + model), getTag())
+                .add(container.getId(), CarCellsFragment.newInstance(brand, model), getTag())
                 .commit());
-        mBinding.recyclerView.setAdapter(adapter);
     }
 
-    public static CarModelPickerFragment newInstance(String brand) {
+    private void isProgressVisible(Boolean isVisible) {
+        mBinding.progressframelayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    private void showErrorDialog(Boolean aBoolean) {
+        mBinding.errorLayout.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+    }
+
+    public static CarModelPickerFragment newInstance(String brandModelsLink) {
         CarModelPickerFragment fragment = new CarModelPickerFragment();
         Bundle args = new Bundle();
-        args.putString(BRAND_PARAM, brand + "/");
+        args.putString(BRAND_PARAM, brandModelsLink);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public List<String> getModelsOfBrand(String brand) {
-        List<String> brandModels = new ArrayList<>();
-        switch (brand) {
-            case "vaz_lada/": {
-                brandModels.add("2101");
-                brandModels.add("2107");
-                brandModels.add("2109");
-                brandModels.add("2114_samara");
-                brandModels.add("Vesta");
-                brandModels.add("Priora");
-                brandModels.add("Kalina");
-                break;
-            }
-            case "Audi/": {
-                brandModels.add("A1");
-                brandModels.add("A3");
-                brandModels.add("A4");
-                brandModels.add("A5");
-                brandModels.add("A6");
-                brandModels.add("A7");
-                brandModels.add("A8");
-                brandModels.add("Q7");
-                brandModels.add("Q8");
-                break;
-            }
-            case "Toyota/": {
-                brandModels.add("Chaser");
-                brandModels.add("Mark_II");
-                brandModels.add("Crown");
-                brandModels.add("Supra");
-                break;
-            }
-            case "BMW/": {
-                brandModels.add("1-seriya");
-                brandModels.add("2-seriya");
-                brandModels.add("3-seriya");
-                brandModels.add("4-seriya");
-                brandModels.add("5-seriya");
-                break;
-            }
-        }
-        return brandModels;
     }
 }

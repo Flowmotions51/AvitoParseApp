@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycompany.avitoparseapp.databinding.CarCellLayoutBinding;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
-import com.example.mycompany.avitoparseapp.IOnCarCellAction;
+import com.example.mycompany.avitoparseapp.utils.IOnCarCellAction;
 import com.example.mycompany.avitoparseapp.R;
 import com.squareup.picasso.Picasso;
 

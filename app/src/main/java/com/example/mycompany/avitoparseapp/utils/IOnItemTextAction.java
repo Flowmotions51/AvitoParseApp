@@ -1,4 +1,4 @@
-package com.example.mycompany.avitoparseapp;
+package com.example.mycompany.avitoparseapp.utils;
 
 public interface IOnItemTextAction {
     void onAction(String string);
