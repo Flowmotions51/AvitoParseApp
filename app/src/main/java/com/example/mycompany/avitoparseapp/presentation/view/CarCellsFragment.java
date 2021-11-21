@@ -1,5 +1,7 @@
 package com.example.mycompany.avitoparseapp.presentation.view;
 
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +15,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mycompany.avitoparseapp.R;
+import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
 import com.example.mycompany.avitoparseapp.databinding.CarCellsFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarCellsAdapter;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.WrapContentGridLayoutManager;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
+import com.example.mycompany.avitoparseapp.utils.SetCellFavorite;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Фрагмент для отображения объявлений, согласено выбранным параметрам
  */
-public class CarCellsFragment extends Fragment {
+public class CarCellsFragment extends Fragment implements SetCellFavorite {
     private static final String MODEL_PARAM = "Model";
     private static final String BRAND_PARAM = "Brand";
     private CarCellsFragmentLayoutBinding mBinding;
@@ -95,9 +100,16 @@ public class CarCellsFragment extends Fragment {
 
     private void showCars(GetItemsResponse getItemsResponse) {
         if(getItemsResponse.getCarCells() != null) {
+            List<CarCell> carCellsFavorites = avitoParseViewModel.getCarCellsFavorites();
+            for(CarCell cell : getItemsResponse.getCarCells()) {
+                if(carCellsFavorites.contains(cell)) {
+                    cell.setFavorite(true);
+                }
+            }
             recyclerViewCarCellsAdapter.setImageUris(getItemsResponse.getCarCells());
             mBinding.recyclerView.setAdapter(recyclerViewCarCellsAdapter);
             swipeRefreshLayout.setRefreshing(false);
+
         }
     }
 
@@ -106,6 +118,16 @@ public class CarCellsFragment extends Fragment {
         super.onSaveInstanceState(outState);
         if(recyclerViewCarCellsAdapter != null && recyclerViewCarCellsAdapter.getCarCells() != null) {
             outState.putParcelableArrayList("CarCellsList", new ArrayList<>(recyclerViewCarCellsAdapter.getCarCells()));
+        }
+    }
+
+    @Override
+    public void setCellFavorite(CarCell cell, boolean isFavorite) {
+        for(CarCell carCell : recyclerViewCarCellsAdapter.getCarCells()) {
+            if(carCell.equals(cell)) {
+                carCell.setFavorite(isFavorite);
+                recyclerViewCarCellsAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

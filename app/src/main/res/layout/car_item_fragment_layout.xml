@@ -16,7 +16,7 @@
         android:translationZ="92dp"
         android:gravity="center"
         android:focusable="true"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:paddingHorizontal="30dp"
@@ -36,7 +36,7 @@
         android:background="@android:color/white"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ProgressBar
             android:id="@+id/progress_bar_car"
@@ -62,10 +62,8 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="1" />
 
-    <LinearLayout
-        android:gravity="center"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:orientation="horizontal"
         android:layout_height="wrap_content">
         <TextView
             android:textSize="15dp"
@@ -74,13 +72,17 @@
             android:id="@+id/itemName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Item Name" />
         <Button
-            android:text="Add To Fav"
+            android:layout_gravity="right"
+            android:text=""
+            android:background="@drawable/addtofavoritebuttonstate"
             android:id="@+id/addItemToFavoritesBtn"
             android:layout_width="wrap_content"
+            android:layout_weight="1"
             android:layout_height="wrap_content"/>
-    </LinearLayout>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/phone"

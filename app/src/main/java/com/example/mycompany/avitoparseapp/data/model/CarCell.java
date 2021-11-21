@@ -11,6 +11,8 @@ public class CarCell implements Parcelable {
     private String linkToItem;
     private String carName;
 
+    private boolean isFavorite;
+
     public CarCell(String previewImageUrl, String firstImgUrl, String linkToItem, String carName) {
         this.previewImageUrl = previewImageUrl;
         this.firstImgUrl = firstImgUrl;
@@ -45,6 +47,14 @@ public class CarCell implements Parcelable {
 
     public String getCarName() {
         return carName;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     protected CarCell(Parcel in) {

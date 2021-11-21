@@ -21,13 +21,13 @@ import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarItemPhotosAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
+import com.example.mycompany.avitoparseapp.utils.SetCellFavorite;
 
 public class CarItemFragment extends Fragment {
     private static final String CAR_CELL_PARAM = "CarCell";
     private CarItemFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private CarItemPhotosAdapter carItemPhotosAdapter;
-
     private CarCell carCell;
     private Car car;
 
@@ -51,6 +51,10 @@ public class CarItemFragment extends Fragment {
         carItemPhotosAdapter = new CarItemPhotosAdapter();
         if(savedInstanceState == null) {
             carCell = (CarCell) getArguments().get("CarCell");
+            if(carCell.isFavorite()) {
+                mBinding.addItemToFavoritesBtn.setActivated(true);
+                mBinding.addItemToFavoritesBtn.setSelected(true);
+            }
             avitoParseViewModel.getIsErrorAtItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
             avitoParseViewModel.getCarItemData().observe(getViewLifecycleOwner(), this::carInfoReceived);
             avitoParseViewModel.getIsInProgressItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
@@ -67,6 +71,23 @@ public class CarItemFragment extends Fragment {
         }
         mBinding.addItemToFavoritesBtn.setOnClickListener(v -> {
             avitoParseViewModel.addCarToFavorites(carCell);
+            if(avitoParseViewModel.getCarCellsFavorites().contains(carCell)) {
+                for (Fragment f : getParentFragmentManager().getFragments()) {
+                    if (f instanceof SetCellFavorite) {
+                        mBinding.addItemToFavoritesBtn.setActivated(true);
+                        mBinding.addItemToFavoritesBtn.setSelected(true);
+                        ((SetCellFavorite) (f)).setCellFavorite(carCell, true);
+                    }
+                }
+            } else {
+                for (Fragment f : getParentFragmentManager().getFragments()) {
+                    if (f instanceof SetCellFavorite) {
+                        mBinding.addItemToFavoritesBtn.setActivated(false);
+                        mBinding.addItemToFavoritesBtn.setSelected(false);
+                        ((SetCellFavorite) (f)).setCellFavorite(carCell, false);
+                    }
+                }
+            }
         });
 
         mBinding.phone.setOnClickListener(v -> {
@@ -78,6 +99,10 @@ public class CarItemFragment extends Fragment {
             }
             startActivity(intent);
         });
+    }
+
+    public void setFavoritesButton(boolean isActivated) {
+        mBinding.addItemToFavoritesBtn.setActivated(isActivated);
     }
 
     @Override

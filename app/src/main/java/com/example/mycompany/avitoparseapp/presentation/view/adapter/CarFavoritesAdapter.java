@@ -1,7 +1,5 @@
 package com.example.mycompany.avitoparseapp.presentation.view.adapter;
 
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mycompany.avitoparseapp.databinding.CarCellLayoutBinding;
-import com.example.mycompany.avitoparseapp.data.model.CarCell;
-import com.example.mycompany.avitoparseapp.utils.IOnCarCellAction;
 import com.example.mycompany.avitoparseapp.R;
+import com.example.mycompany.avitoparseapp.data.model.CarCell;
+import com.example.mycompany.avitoparseapp.databinding.CarCellLayoutBinding;
+import com.example.mycompany.avitoparseapp.utils.IOnCarCellAction;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarImageViewHolder> {
+public class CarFavoritesAdapter extends RecyclerView.Adapter<CarFavoritesAdapter.CarImageViewHolder> {
     private List<CarCell> carCells;
     private IOnCarCellAction helper;
 
@@ -47,10 +45,6 @@ public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarIma
         holder.setImageByUrl(carCells.get(holder.getBindingAdapterPosition()).getPreviewImageUrl());
         holder.setDescription(carCells.get(holder.getBindingAdapterPosition()).getCarName());
         holder.setOnCLickListener(v -> helper.action(carCells.get(holder.getBindingAdapterPosition())));
-        holder.isCellFavoriteImage.setVisibility(View.GONE);
-        if(carCells.get(holder.getBindingAdapterPosition()).isFavorite()) {
-            holder.isCellFavoriteImage.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -66,7 +60,6 @@ public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarIma
     public static class CarImageViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
-        private ImageView isCellFavoriteImage;
         private TextView textView;
 
         private CarCellLayoutBinding mBinding;
@@ -76,7 +69,6 @@ public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarIma
             mBinding = CarCellLayoutBinding.bind(itemView);
             imageView = mBinding.carImagePlaceholder;
             textView = mBinding.carDescription;
-            isCellFavoriteImage = mBinding.isCellFavoriteImage;
         }
 
         public void setOnCLickListener(View.OnClickListener listener) {
