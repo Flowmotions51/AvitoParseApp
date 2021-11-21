@@ -43,6 +43,10 @@ public class CarBrandPickerFragment extends Fragment {
         avitoParseViewModel.getIsInProgressBrandListLoading().observe(this.getActivity(), this::isProgressVisible);
         avitoParseViewModel.getIsErrorAtBrandListLoading().observe(this.getActivity(), this::showErrorDialog);
         avitoParseViewModel.getBrandListData().observe(this.getActivity(), this::showBrands);
+        avitoParseViewModel.loadBrandsData();
+    }
+
+    private void showBrands(List<Brand> carBrands) {
         adapter = new CarBrandAdapter();
         adapter.setAction(brandModelsLink ->
                 CarBrandPickerFragment.this.getParentFragmentManager()
@@ -51,12 +55,13 @@ public class CarBrandPickerFragment extends Fragment {
                         .addToBackStack("CarModelPickerFragment")
                         .add(container.getId(), CarModelPickerFragment.newInstance(brandModelsLink))
                         .commit());
-        avitoParseViewModel.loadBrandsData();
-    }
-
-    private void showBrands(List<Brand> carBrands) {
         adapter.setModels(carBrands);
         mBinding.recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     private void isProgressVisible(Boolean isVisible) {

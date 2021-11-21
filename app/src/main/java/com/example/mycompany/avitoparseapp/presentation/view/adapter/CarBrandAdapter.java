@@ -15,16 +15,19 @@ import com.example.mycompany.avitoparseapp.utils.IOnItemTextAction;
 import java.util.List;
 
 public class CarBrandAdapter extends RecyclerView.Adapter<CarBrandAdapter.CarModelViewHolder> {
-
-    public void setModels(List<Brand> models) {
-        this.models = models;
-    }
-
     private List<Brand> models;
     private IOnItemTextAction action;
 
     public void setAction(IOnItemTextAction action) {
         this.action = action;
+    }
+
+    public void setModels(List<Brand> models) {
+        this.models = models;
+    }
+
+    public List<Brand> getModels() {
+        return models;
     }
 
     @NonNull
