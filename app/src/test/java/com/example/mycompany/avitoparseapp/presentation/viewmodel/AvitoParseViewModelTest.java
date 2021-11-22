@@ -65,7 +65,6 @@ public class AvitoParseViewModelTest {
         verify(isErrorAtCellsLoadingObserver).onChanged(false);
     }
 
-
     private GetItemsResponse createTestData() {
         GetItemsResponse testData = new GetItemsResponse("Ok", new ArrayList<>(
                 Arrays.asList(
