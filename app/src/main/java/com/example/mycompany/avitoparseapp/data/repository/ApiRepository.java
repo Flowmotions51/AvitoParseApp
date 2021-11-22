@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Single;
 
-public class ApiRepository implements IApiRepository {
+public class ApiRepository {
 
     private ApiService apiService;
 
