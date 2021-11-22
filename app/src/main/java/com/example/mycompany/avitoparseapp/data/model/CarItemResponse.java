@@ -1,10 +1,10 @@
 package com.example.mycompany.avitoparseapp.data.model;
 
-public class ItemResponse {
+public class CarItemResponse {
     private String message;
     private Car car;
 
-    public ItemResponse(String message, Car car) {
+    public CarItemResponse(String message, Car car) {
         this.message = message;
         this.car = car;
     }

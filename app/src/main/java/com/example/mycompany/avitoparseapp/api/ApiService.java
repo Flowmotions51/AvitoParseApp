@@ -2,7 +2,7 @@ package com.example.mycompany.avitoparseapp.api;
 
 import com.example.mycompany.avitoparseapp.data.model.Brand;
 import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
-import com.example.mycompany.avitoparseapp.data.model.ItemResponse;
+import com.example.mycompany.avitoparseapp.data.model.CarItemResponse;
 import com.example.mycompany.avitoparseapp.data.model.Model;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public interface ApiService {
     Single<GetItemsResponse> getResponseItemList(@Path("brand")String brand, @Path("model")String model);
 
     @GET("getItem/{link}")
-    Single<ItemResponse> getItem(@Path("link")String link);
+    Single<CarItemResponse> getItem(@Path("link")String link);
 
     @GET("getBrandList")
     Single<List<Brand>> getBrandList();

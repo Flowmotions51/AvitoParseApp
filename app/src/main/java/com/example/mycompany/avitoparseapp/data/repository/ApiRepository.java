@@ -3,7 +3,7 @@ package com.example.mycompany.avitoparseapp.data.repository;
 import com.example.mycompany.avitoparseapp.api.ApiService;
 import com.example.mycompany.avitoparseapp.data.model.Brand;
 import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
-import com.example.mycompany.avitoparseapp.data.model.ItemResponse;
+import com.example.mycompany.avitoparseapp.data.model.CarItemResponse;
 import com.example.mycompany.avitoparseapp.data.model.Model;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class ApiRepository implements IApiRepository {
         return apiService.getResponseItemList(brand, model);
     }
 
-    public Single<ItemResponse> getCar(String link) {
+    public Single<CarItemResponse> getCar(String link) {
         return apiService.getItem(link);
     }
 
