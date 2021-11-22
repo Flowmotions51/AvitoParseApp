@@ -58,14 +58,14 @@ public class AvitoParseViewModelTest {
 
     @Test
     public void testLoadCarCellsData() {
-        when(apiRepository.getCarCells(anyString(), anyString())).thenReturn(Single.just(createTestData()));
+        when(apiRepository.getCarCells(anyString(), anyString())).thenReturn(Single.just(createCarCellsTestData()));
         avitoParseViewModel.loadCarCellsData("bmw", "1-seriya", true);
         verify(isInProgressCellsLoadingObserver).onChanged(true);
-        verify(carCellsListObserver).onChanged(createTestData());
+        verify(carCellsListObserver).onChanged(createCarCellsTestData());
         verify(isErrorAtCellsLoadingObserver).onChanged(false);
     }
 
-    private GetItemsResponse createTestData() {
+    private GetItemsResponse createCarCellsTestData() {
         GetItemsResponse testData = new GetItemsResponse("Ok", new ArrayList<>(
                 Arrays.asList(
                         new CarCell("https://image.com",
