@@ -1,7 +1,5 @@
 package com.example.mycompany.avitoparseapp.presentation.view;
 
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,9 +79,9 @@ public class CarCellsFragment extends Fragment implements SetCellFavorite {
         avitoParseViewModel.getIsErrorAtCellsLoading().observe(this.getActivity(), this::showErrorDialog);
 
         swipeRefreshLayout.setOnRefreshListener(() ->
-                avitoParseViewModel.loadCellsData(carBrand, carModel, false));
+                avitoParseViewModel.loadCarCellsData(carBrand, carModel, false));
         if(savedInstanceState == null) {
-            avitoParseViewModel.loadCellsData(carBrand, carModel, true);
+            avitoParseViewModel.loadCarCellsData(carBrand, carModel, true);
         } else {
             recyclerViewCarCellsAdapter.setImageUris(savedInstanceState.getParcelableArrayList("CarCellsList"));
             recyclerViewCarCellsAdapter.notifyDataSetChanged();

@@ -1,39 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:clickable="true"
     android:background="@color/white"
+    android:clickable="true"
     android:orientation="vertical">
 
     <RelativeLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/errorLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@android:color/white"
         android:clickable="true"
-        android:translationZ="92dp"
-        android:gravity="center"
         android:focusable="true"
+        android:gravity="center"
+        android:translationZ="92dp"
         android:visibility="gone">
 
         <TextView
-            android:paddingHorizontal="30dp"
+            android:id="@+id/errorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@android:color/holo_red_dark"
             android:gravity="center"
-            android:id="@+id/errorText"
-            android:textSize="30sp"
+            android:paddingHorizontal="30dp"
             android:text="Error loading item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:textSize="30sp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/progressframelayout_car"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
+        android:translationZ="90dp"
         android:clickable="true"
         android:focusable="true"
         android:visibility="gone">
@@ -54,44 +63,68 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:visibility="visible"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="1" />
+        <com.example.mycompany.avitoparseapp.presentation.view.adapter.VerticalViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            android:background="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/itemName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:spanCount="1" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="15dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:id="@+id/itemName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Item Name" />
-        <Button
-            android:layout_gravity="right"
-            android:text=""
-            android:background="@drawable/addtofavoritebuttonstate"
-            android:id="@+id/addItemToFavoritesBtn"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"/>
-    </FrameLayout>
+    <TextView
+        android:id="@+id/itemName"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="Item Name"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/phone"
+        app:layout_constraintEnd_toStartOf="@+id/addItemToFavoritesBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_pager" />
+
+    <Button
+        android:id="@+id/addItemToFavoritesBtn"
+        app:layout_constraintStart_toEndOf="@+id/itemName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_pager"
+        app:layout_constraintBottom_toTopOf="@+id/phone"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="right"
+        android:layout_weight="1"
+        android:background="@drawable/addtofavoritebuttonstate"
+        android:text="" />
+
 
     <TextView
         android:id="@+id/phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@android:color/holo_green_light"
+        android:gravity="center"
+        android:text="+799999999"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemName" />
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone">
+
         <TextView
             android:id="@+id/carDescription"
             android:layout_width="match_parent"
@@ -100,6 +133,4 @@
     </ScrollView>
 
 
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

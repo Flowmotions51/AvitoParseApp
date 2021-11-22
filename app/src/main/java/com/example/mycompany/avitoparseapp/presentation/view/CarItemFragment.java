@@ -15,11 +15,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mycompany.avitoparseapp.data.model.DataItem;
-import com.example.mycompany.avitoparseapp.databinding.CarItemFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
+import com.example.mycompany.avitoparseapp.databinding.CarItemFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarItemPhotosAdapter;
+import com.example.mycompany.avitoparseapp.presentation.view.adapter.ItemImagesViewPagerAdapter;
+import com.example.mycompany.avitoparseapp.presentation.view.adapter.VerticalViewPager;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 import com.example.mycompany.avitoparseapp.utils.SetCellFavorite;
 
@@ -28,6 +29,8 @@ public class CarItemFragment extends Fragment {
     private CarItemFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private CarItemPhotosAdapter carItemPhotosAdapter;
+    private VerticalViewPager imageItemViewPager;
+    private ItemImagesViewPagerAdapter itemImagesViewPagerAdapter;
     private CarCell carCell;
     private Car car;
 
@@ -48,7 +51,7 @@ public class CarItemFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
-        carItemPhotosAdapter = new CarItemPhotosAdapter();
+        imageItemViewPager = mBinding.viewPager;
         if(savedInstanceState == null) {
             carCell = (CarCell) getArguments().get("CarCell");
             if(carCell.isFavorite()) {
@@ -62,8 +65,8 @@ public class CarItemFragment extends Fragment {
         } else {
             carCell = (CarCell) savedInstanceState.getParcelable("CarCell");
             car = (Car)savedInstanceState.getParcelable("CarItem");
-            carItemPhotosAdapter.setPhotoLinks(car.getPhotoLinks());
-            mBinding.recyclerView.setAdapter(carItemPhotosAdapter);
+            itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
+            imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
             mBinding.itemName.setText(car.getCarName());
             mBinding.carDescription.setText(car.getCarDescription());
             showErrorDialog(false);
@@ -115,8 +118,8 @@ public class CarItemFragment extends Fragment {
     public void carInfoReceived(Car car) {
         this.car = car;
         mBinding.errorLayout.setVisibility(View.GONE);
-        carItemPhotosAdapter.setPhotoLinks(car.getPhotoLinks());
-        mBinding.recyclerView.setAdapter(carItemPhotosAdapter);
+        itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
+        imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
         mBinding.itemName.setText(car.getCarName());
         mBinding.carDescription.setText(car.getCarDescription());
         mBinding.phone.setText(car.getPhone());
@@ -126,14 +129,6 @@ public class CarItemFragment extends Fragment {
         CarItemFragment fragment = new CarItemFragment();
         Bundle args = new Bundle();
         args.putParcelable(CAR_CELL_PARAM, carCell);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static CarItemFragment newInstance(DataItem dataItem) {
-        CarItemFragment fragment = new CarItemFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(CAR_CELL_PARAM, null);
         fragment.setArguments(args);
         return fragment;
     }

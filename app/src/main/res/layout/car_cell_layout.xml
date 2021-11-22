@@ -1,33 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/darker_gray"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="250dp">
-        <ImageView
-            android:layout_marginTop="40dp"
-            android:translationZ="90dp"
-            android:id="@+id/isCellFavoriteImage"
-            android:visibility="gone"
-            android:src="@drawable/favorited"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
-        <ImageView
-            android:id="@+id/car_image_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"/>
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/isCellFavoriteImage"
+        android:layout_width="53dp"
+        android:layout_height="50dp"
+        android:src="@drawable/outline_favorite_24"
+        android:translationZ="90dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/car_image_placeholder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3"
+        app:tint="@android:color/holo_red_dark" />
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/car_image_placeholder"
+        android:layout_width="0dp"
+        android:scaleType="centerCrop"
+        android:layout_height="150dp"
+        android:layout_margin="10dp"
+        app:shapeAppearanceOverlay="@style/Theme.AvitoParseApp"
+        app:layout_constraintBottom_toTopOf="@+id/car_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/car_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="Item name"
         android:textSize="20dp"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car_image_placeholder" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

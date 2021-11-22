@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
-import com.example.mycompany.avitoparseapp.data.model.DataItem;
 import com.example.mycompany.avitoparseapp.databinding.CarItemFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarItemPhotosAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
@@ -53,7 +52,7 @@ public class CarItemFavoritesFragment extends Fragment {
             carCell = (CarCell) savedInstanceState.getParcelable("CarCellFav");
             car = (Car) savedInstanceState.getParcelable("CarItemFav");
             carItemPhotosAdapter.setPhotoLinks(car.getPhotoLinks());
-            mBinding.recyclerView.setAdapter(carItemPhotosAdapter);
+//            mBinding.recyclerView.setAdapter(carItemPhotosAdapter);
             mBinding.itemName.setText(car.getCarName());
             mBinding.carDescription.setText(car.getCarDescription());
             showErrorDialog(false);
@@ -74,21 +73,13 @@ public class CarItemFavoritesFragment extends Fragment {
     public void carInfoReceived(Car car) {
         this.car = car;
         mBinding.errorLayout.setVisibility(View.GONE);
-        carItemPhotosAdapter.setPhotoLinks(car.getPhotoLinks());
-        mBinding.recyclerView.setAdapter(carItemPhotosAdapter);
+//        carItemPhotosAdapter.setPhotoLinks(car.getPhotoLinks());
+//        mBinding.recyclerView.setAdapter(carItemPhotosAdapter);
         mBinding.itemName.setText(car.getCarName());
         mBinding.carDescription.setText(car.getCarDescription());
     }
 
     public static CarItemFavoritesFragment newInstance(CarCell carCell) {
-        CarItemFavoritesFragment fragment = new CarItemFavoritesFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(CAR_CELL_PARAM, carCell);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static CarItemFavoritesFragment newInstance(DataItem carCell) {
         CarItemFavoritesFragment fragment = new CarItemFavoritesFragment();
         Bundle args = new Bundle();
         args.putParcelable(CAR_CELL_PARAM, carCell);

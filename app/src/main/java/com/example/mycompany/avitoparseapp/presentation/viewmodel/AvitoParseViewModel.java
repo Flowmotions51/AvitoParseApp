@@ -10,6 +10,7 @@ import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
 import com.example.mycompany.avitoparseapp.data.model.Model;
 import com.example.mycompany.avitoparseapp.data.repository.ApiRepository;
+import com.example.mycompany.avitoparseapp.api.SchedulersProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,16 +126,19 @@ public class AvitoParseViewModel extends ViewModel {
 
     private ApiRepository apiRepository;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private SchedulersProvider schedulersProvider;
+
 
     @Inject
-    public AvitoParseViewModel(ApiRepository apiRepository) {
+    public AvitoParseViewModel(ApiRepository apiRepository, SchedulersProvider schedulersProvider) {
         this.apiRepository = apiRepository;
+        this.schedulersProvider = schedulersProvider;
     }
 
     public void loadBrandsData() {
-        compositeDisposable.add(apiRepository.brandList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+        compositeDisposable.add(apiRepository.getBrandList()
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressBrandListLoading.setValue(false))
                 .subscribe(val -> brandListData.setValue(val),
                         e -> isErrorAtBrandListLoading.setValue(true)));
@@ -143,9 +147,9 @@ public class AvitoParseViewModel extends ViewModel {
     public void loadModelsData(String brand) {
         isErrorAtModelsListLoading.setValue(false);
         isInProgressModelsListLoading.setValue(true);
-        compositeDisposable.add(apiRepository.modelsList(brand)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+        compositeDisposable.add(apiRepository.getModelList(brand)
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressModelsListLoading.setValue(false))
                 .subscribe(val -> modelsListData.setValue(val),
                         e -> isErrorAtModelsListLoading.setValue(true)));
@@ -155,12 +159,12 @@ public class AvitoParseViewModel extends ViewModel {
      * Метод для получения списка объявлений автомобилей на основе переданных параметров
      *
      */
-    public void loadCellsData(String brand, String model, boolean isProgressBarShowed) {
+    public void loadCarCellsData(String brand, String model, boolean isProgressBarShowed) {
         isErrorAtCellsLoading.setValue(false);
         isInProgressCellsLoading.setValue(isProgressBarShowed);
-                compositeDisposable.add(apiRepository.itemSingle(brand, model)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+                compositeDisposable.add(apiRepository.getCarCells(brand, model)
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressCellsLoading.setValue(false))
                 .subscribe(val -> carCellsMutableLiveData.setValue(val),
                         e -> isErrorAtCellsLoading.setValue(true)));
@@ -176,9 +180,9 @@ public class AvitoParseViewModel extends ViewModel {
         String link = carCell.getLinkToItem().substring(carCell.getLinkToItem().lastIndexOf('/') + 1);
         isErrorAtItemLoading.setValue(false);
         isInProgressItemLoading.setValue(true);
-        compositeDisposable.add(apiRepository.itemCar(link)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+        compositeDisposable.add(apiRepository.getCar(link)
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressItemLoading.setValue(false))
                 .subscribe(val -> carItemData.setValue(val.getCar()),
                         e -> isErrorAtItemLoading.setValue(true)));
@@ -193,9 +197,9 @@ public class AvitoParseViewModel extends ViewModel {
         String link = carCell.getLinkToItem().substring(carCell.getLinkToItem().lastIndexOf('/') + 1);
         isErrorAtFavoriteItemLoading.setValue(false);
         isInProgressFavoriteItemLoading.setValue(true);
-        compositeDisposable.add(apiRepository.itemCar(link)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+        compositeDisposable.add(apiRepository.getCar(link)
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressFavoriteItemLoading.setValue(false))
                 .subscribe(val -> carItemDataFavorites.setValue(val.getCar()),
                         e -> isErrorAtFavoriteItemLoading.setValue(true)));

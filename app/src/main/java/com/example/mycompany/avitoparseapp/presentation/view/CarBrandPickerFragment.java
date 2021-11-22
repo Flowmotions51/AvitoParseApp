@@ -59,11 +59,6 @@ public class CarBrandPickerFragment extends Fragment {
         mBinding.recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     private void isProgressVisible(Boolean isVisible) {
         mBinding.progressframelayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }

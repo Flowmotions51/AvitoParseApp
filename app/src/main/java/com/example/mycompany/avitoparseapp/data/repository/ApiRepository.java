@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Single;
 
-public class ApiRepository {
+public class ApiRepository implements IApiRepository {
 
     private ApiService apiService;
 
@@ -21,19 +21,19 @@ public class ApiRepository {
         this.apiService = apiService;
     }
 
-    public Single<GetItemsResponse> itemSingle(String brand, String model) {
+    public Single<GetItemsResponse> getCarCells(String brand, String model) {
         return apiService.getResponseItemList(brand, model);
     }
 
-    public Single<ItemResponse> itemCar(String link) {
+    public Single<ItemResponse> getCar(String link) {
         return apiService.getItem(link);
     }
 
-    public Single<List<Brand>> brandList() {
+    public Single<List<Brand>> getBrandList() {
         return apiService.getBrandList();
     }
 
-    public Single<List<Model>> modelsList(String brand) {
+    public Single<List<Model>> getModelList(String brand) {
         return apiService.getModelsList(brand);
     }
 }

@@ -26,7 +26,6 @@ public class CarModelPickerFragment extends Fragment {
     private AvitoParseViewModel avitoParseViewModel;
     private CarModelPickerFragmentLayoutBinding mBinding;
     private ViewGroup container;
-    private List<String> carModels;
     private String brand;
     private CarModelAdapter adapter;
 
