@@ -178,13 +178,13 @@ public class AvitoParseViewModel extends ViewModel {
     public void loadCarItemData(CarCell carCell) {
         //todo
         String link = carCell.getLinkToItem().substring(carCell.getLinkToItem().lastIndexOf('/') + 1);
-        isErrorAtItemLoading.setValue(false);
         isInProgressItemLoading.setValue(true);
+        isErrorAtItemLoading.setValue(false);
         compositeDisposable.add(apiRepository.getCar(link)
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressItemLoading.setValue(false))
-                .subscribe(val -> carItemData.setValue(val.getCar()),
+                .subscribe(val -> carItemData.setValue(val),
                         e -> isErrorAtItemLoading.setValue(true)));
     }
 
@@ -201,7 +201,7 @@ public class AvitoParseViewModel extends ViewModel {
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressFavoriteItemLoading.setValue(false))
-                .subscribe(val -> carItemDataFavorites.setValue(val.getCar()),
+                .subscribe(val -> carItemDataFavorites.setValue(val),
                         e -> isErrorAtFavoriteItemLoading.setValue(true)));
     }
 

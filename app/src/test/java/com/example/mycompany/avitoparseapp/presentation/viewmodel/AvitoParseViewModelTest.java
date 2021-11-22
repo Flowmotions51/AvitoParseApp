@@ -8,6 +8,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
 import com.example.mycompany.avitoparseapp.api.SchedulersProvider;
+import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
 import com.example.mycompany.avitoparseapp.data.repository.ApiRepository;
@@ -42,6 +43,13 @@ public class AvitoParseViewModelTest {
     @Mock
     private Observer<GetItemsResponse> carCellsListObserver;
 
+    @Mock
+    private Observer<Boolean> isInProgressItemLoadingObserver;
+    @Mock
+    private Observer<Boolean> isErrorAtItemLoadingObserver;
+    @Mock
+    private Observer<Car> carItemDataObserver;
+
     private AvitoParseViewModel avitoParseViewModel;
 
     @Before
@@ -54,6 +62,10 @@ public class AvitoParseViewModelTest {
         avitoParseViewModel.getIsInProgressCellsLoading().observeForever(isInProgressCellsLoadingObserver);
         avitoParseViewModel.getIsErrorAtCellsLoading().observeForever(isErrorAtCellsLoadingObserver);
         avitoParseViewModel.getCarCellsMutableLiveData().observeForever(carCellsListObserver);
+
+        avitoParseViewModel.getIsInProgressItemLoading().observeForever(isInProgressItemLoadingObserver);
+        avitoParseViewModel.getIsErrorAtItemLoading().observeForever(isErrorAtItemLoadingObserver);
+        avitoParseViewModel.getCarItemData().observeForever(carItemDataObserver);
     }
 
     @Test
@@ -63,6 +75,22 @@ public class AvitoParseViewModelTest {
         verify(isInProgressCellsLoadingObserver).onChanged(true);
         verify(carCellsListObserver).onChanged(createCarCellsTestData());
         verify(isErrorAtCellsLoadingObserver).onChanged(false);
+    }
+
+    @Test
+    public void testLoadCarItemData() {
+        when(apiRepository.getCar(anyString())).thenReturn(Single.just(createCarItemResponseData()));
+        avitoParseViewModel.loadCarItemData(createCarCellsTestData().getCarCells().get(0));
+        verify(isInProgressItemLoadingObserver).onChanged(true);
+        verify(carItemDataObserver).onChanged(createCarItemResponseData());
+        verify(isErrorAtItemLoadingObserver).onChanged(false);
+    }
+
+    private Car createCarItemResponseData() {
+        Car car = new Car("carName", "mainphotolink",
+                "telephoneLink", Arrays.asList("link", "link2", "link3"),
+                "desc", "phone");
+        return car;
     }
 
     private GetItemsResponse createCarCellsTestData() {
