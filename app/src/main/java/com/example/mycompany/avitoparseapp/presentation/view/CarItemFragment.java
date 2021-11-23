@@ -54,6 +54,7 @@ public class CarItemFragment extends Fragment implements RemoveFavoriteFromCarIt
         super.onViewCreated(view, savedInstanceState);
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
         imageItemViewPager = mBinding.viewPager;
+        addItemToFavoriteBtn = mBinding.addItemToFavoritesBtn;
         if(savedInstanceState == null) {
             carCell = (CarCell) getArguments().get("CarCell");
             if(carCell.isFavorite()) {
@@ -111,8 +112,8 @@ public class CarItemFragment extends Fragment implements RemoveFavoriteFromCarIt
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable("CarItem", car);
-        if(mBinding.addItemToFavoritesBtn != null) {
-            outState.putBoolean("IsFavoritesActivated", mBinding.addItemToFavoritesBtn.isSelected());
+        if(addItemToFavoriteBtn != null) {
+            outState.putBoolean("IsFavoritesActivated", addItemToFavoriteBtn.isSelected());
         }
         outState.putParcelable("CarCell", carCell);
         super.onSaveInstanceState(outState);
