@@ -63,7 +63,7 @@ public class CarItemFavoritesFragment extends Fragment {
             isProgressVisible(false);
         }
         mBinding.addItemToFavoritesBtn.setOnClickListener(v -> {
-            avitoParseViewModel.addCarToFavorites(carCell);
+            avitoParseViewModel.addCarToFavorites(carCell, car);
         });
     }
 

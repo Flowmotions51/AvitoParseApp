@@ -74,7 +74,7 @@ public class CarFavoritesFragment extends Fragment implements ItemTouchHelperAda
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int itemPosition = viewHolder.getBindingAdapterPosition();
                 CarCell carCell = recyclerViewCarCellsAdapter.getCarCells().get(itemPosition);
-                avitoParseViewModel.addCarToFavorites(carCell);
+                avitoParseViewModel.removeCarFromFavorites(carCell);
                 for (Fragment f : getActivity().getSupportFragmentManager()
                         .getFragments().get(0).getChildFragmentManager().getFragments()) {
                     if (f instanceof SetCellFavorite) {

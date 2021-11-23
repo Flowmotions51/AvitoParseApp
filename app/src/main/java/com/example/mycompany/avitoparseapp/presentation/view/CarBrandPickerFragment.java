@@ -39,11 +39,17 @@ public class CarBrandPickerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        showErrorDialog(false);
         avitoParseViewModel = new ViewModelProvider(this.getActivity()).get(AvitoParseViewModel.class);
         avitoParseViewModel.getIsInProgressBrandListLoading().observe(this.getActivity(), this::isProgressVisible);
         avitoParseViewModel.getIsErrorAtBrandListLoading().observe(this.getActivity(), this::showErrorDialog);
         avitoParseViewModel.getBrandListData().observe(this.getActivity(), this::showBrands);
         avitoParseViewModel.loadBrandsData();
+        mBinding.errorLayout.setOnClickListener(v -> {
+            showErrorDialog(false);
+            isProgressVisible(true);
+            avitoParseViewModel.loadBrandsData();
+        });
     }
 
     private void showBrands(List<Brand> carBrands) {

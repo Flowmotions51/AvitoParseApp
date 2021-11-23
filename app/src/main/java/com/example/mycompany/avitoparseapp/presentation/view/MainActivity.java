@@ -13,7 +13,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.mycompany.avitoparseapp.BaseApplication;
 import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
-import com.example.mycompany.avitoparseapp.database.DAO;
 import com.example.mycompany.avitoparseapp.databinding.ActivityMainBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.ViewPagerAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
@@ -28,15 +27,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String SHARED_PREFS = "sharedPrefs";
-
-
     @Inject
     ViewModelProvider.Factory viewModelFactory;
-//
-//    @Inject
-//    DAO dao;
 
     private AvitoParseViewModel avitoParseViewModel;
 
@@ -53,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         ((BaseApplication)getApplication())
                 .getAppComponent()
                 .inject(this);
+
+        //getApplicationContext().deleteDatabase("AppDb");
 
         avitoParseViewModel
                 = new ViewModelProvider(this, viewModelFactory).get(AvitoParseViewModel.class);
@@ -75,23 +69,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         tabLayoutMediator.attach();
-
-
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("CarCellsFavorites", "");
-        if (!json.equals("")) {
-            List<LinkedTreeMap> linkedTreeMaps = gson.fromJson(json, ArrayList.class);
-            List<CarCell> carCells = new ArrayList<>();
-            for (LinkedTreeMap map : linkedTreeMaps) {
-                String previewImageUrl = (String) map.get("previewImageUrl");
-                String firstImgUrl = (String) map.get("firstImgUrl");
-                String linkToItem = (String) map.get("linkToItem");
-                String carName = (String) map.get("carName");
-                carCells.add(new CarCell(previewImageUrl, firstImgUrl, linkToItem, carName));
-            }
-            avitoParseViewModel.setCarCellsFavorites(carCells);
-        }
     }
 
     @Override
@@ -111,9 +88,5 @@ public class MainActivity extends AppCompatActivity {
         childFragmentManager.beginTransaction()
                 .remove(topFragment)
                 .commit();
-    }
-
-    public SharedPreferences getMySharedPreferences() {
-        return getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
     }
 }

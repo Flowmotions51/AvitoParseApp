@@ -11,7 +11,8 @@ import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
 import com.example.mycompany.avitoparseapp.data.model.Model;
 import com.example.mycompany.avitoparseapp.data.repository.ApiRepository;
-import com.example.mycompany.avitoparseapp.database.DAO;
+import com.example.mycompany.avitoparseapp.database.CarDAO;
+import com.example.mycompany.avitoparseapp.database.CarCellDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,8 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class AvitoParseViewModel extends ViewModel {
-    private DAO dao;
+    private CarCellDAO carCellDao;
+    private CarDAO carDao;
 
     /**
      * CarBrandPickerFragment liveData
@@ -98,7 +100,7 @@ public class AvitoParseViewModel extends ViewModel {
     private MutableLiveData<List<CarCell>> carFavoritesCellsData = new MutableLiveData<>();
 
     public List<CarCell> getCarCellsFavorites() {
-        return dao.getAllRecordsFromDb();
+        return carCellDao.getAllRecordsFromDb();
     }
     public void setCarCellsFavorites(List<CarCell> carCellsFavorites) {
         this.carCellsFavorites = carCellsFavorites;
@@ -131,13 +133,16 @@ public class AvitoParseViewModel extends ViewModel {
 
 
     @Inject
-    public AvitoParseViewModel(ApiRepository apiRepository, SchedulersProvider schedulersProvider, DAO dao) {
+    public AvitoParseViewModel(ApiRepository apiRepository, SchedulersProvider schedulersProvider, CarCellDAO carCellDao, CarDAO carDAO) {
         this.apiRepository = apiRepository;
         this.schedulersProvider = schedulersProvider;
-        this.dao = dao;
+        this.carCellDao = carCellDao;
+        this.carDao = carDAO;
     }
 
     public void loadBrandsData() {
+        isErrorAtBrandListLoading.setValue(false);
+        isInProgressBrandListLoading.setValue(true);
         compositeDisposable.add(apiRepository.getBrandList()
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
@@ -195,10 +200,12 @@ public class AvitoParseViewModel extends ViewModel {
      * @param carCell - выбранное объявление из списка, который был получен в loadCellsData(String params)
      */
     public void loadCarItemFavoriteData(CarCell carCell) {
-        String link = carCell.getLinkToItem().substring(carCell.getLinkToItem().lastIndexOf('/') + 1);
+        int carId = carCellDao.selectCarIdByLinkItem(carCell.getLinkToItem());
+
+        //String link = carCell.getLinkToItem().substring(carCell.getLinkToItem().lastIndexOf('/') + 1);
         isErrorAtFavoriteItemLoading.setValue(false);
         isInProgressFavoriteItemLoading.setValue(true);
-        compositeDisposable.add(apiRepository.getCar(link)
+        compositeDisposable.add(carDao.selectByCarId(carId)
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressFavoriteItemLoading.setValue(false))
@@ -207,20 +214,33 @@ public class AvitoParseViewModel extends ViewModel {
     }
 
     public void loadCarFav() {
-        carFavoritesCellsData.setValue(dao.getAllRecordsFromDb());
+        carFavoritesCellsData.setValue(carCellDao.getAllRecordsFromDb());
         isInProgressCellsLoading.setValue(false);
     }
 
-    public void addCarToFavorites(CarCell carCell) {
-        if (dao.selectCountByLinkItem(carCell.getLinkToItem()) == 0) {
-            dao.insertRecord(new CarCell(carCell.getPreviewImageUrl(),
+    public void addCarToFavorites(CarCell carCell, Car car) {
+        if (carCellDao.selectCountByLinkItem(carCell.getLinkToItem()) == 0) {
+            carDao.insertRecord(car);
+            int carId = carDao.getIdFromDbBy(car.getMainPhotoLink());
+            CarCell carCellToInsert = new CarCell(carCell.getPreviewImageUrl(),
                     carCell.getFirstImgUrl(), carCell.getLinkToItem(),
-                    carCell.getCarName()));
-            carFavoritesCellsData.postValue(dao.getAllRecordsFromDb());
+                    carCell.getCarName());
+            carCellToInsert.setCarId(carId);
+            carCellDao.insertRecord(carCellToInsert);
+            carFavoritesCellsData.postValue(carCellDao.getAllRecordsFromDb());
         } else {
-            dao.deleteByLink(carCell.getLinkToItem());
-            carFavoritesCellsData.postValue(dao.getAllRecordsFromDb());
+            int carId = carCellDao.selectCarIdByLinkItem(carCell.getLinkToItem());
+            carDao.deleteByCarId(carId);
+            carCellDao.deleteByLink(carCell.getLinkToItem());
+            carFavoritesCellsData.postValue(carCellDao.getAllRecordsFromDb());
         }
+    }
+
+    public void removeCarFromFavorites(CarCell carCell) {
+        int carId = carCellDao.selectCarIdByLinkItem(carCell.getLinkToItem());
+        carDao.deleteByCarId(carId);
+        carCellDao.deleteByLink(carCell.getLinkToItem());
+        carFavoritesCellsData.postValue(carCellDao.getAllRecordsFromDb());
     }
 
     @Override

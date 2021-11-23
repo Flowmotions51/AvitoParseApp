@@ -1,9 +1,5 @@
 package com.example.mycompany.avitoparseapp.di.components;
 
-import android.app.Application;
-import android.content.Context;
-
-import com.example.mycompany.avitoparseapp.database.DAO;
 import com.example.mycompany.avitoparseapp.di.modules.ContextModule;
 import com.example.mycompany.avitoparseapp.di.modules.DatabaseModule;
 import com.example.mycompany.avitoparseapp.di.modules.NetworkModule;

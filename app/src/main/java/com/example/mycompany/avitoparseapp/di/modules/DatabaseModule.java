@@ -1,17 +1,13 @@
 package com.example.mycompany.avitoparseapp.di.modules;
 
 import android.app.Application;
-import android.content.Context;
-
-import androidx.room.Room;
 
 import com.example.mycompany.avitoparseapp.database.AppDatabase;
-import com.example.mycompany.avitoparseapp.database.DAO;
+import com.example.mycompany.avitoparseapp.database.CarDAO;
+import com.example.mycompany.avitoparseapp.database.CarCellDAO;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
 
@@ -20,7 +16,13 @@ public abstract class DatabaseModule {
 
     @Singleton
     @Provides
-    static DAO getDao(AppDatabase appDatabase) {
+    static CarDAO getCarDao(AppDatabase appDatabase) {
+        return appDatabase.getCarDao();
+    }
+
+    @Singleton
+    @Provides
+    static CarCellDAO getDao(AppDatabase appDatabase) {
         return appDatabase.getDao();
     }
 

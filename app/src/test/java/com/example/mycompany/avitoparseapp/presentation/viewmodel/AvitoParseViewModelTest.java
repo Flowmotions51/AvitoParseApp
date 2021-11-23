@@ -12,6 +12,8 @@ import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
 import com.example.mycompany.avitoparseapp.data.repository.ApiRepository;
+import com.example.mycompany.avitoparseapp.database.CarCellDAO;
+import com.example.mycompany.avitoparseapp.database.CarDAO;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,6 +37,10 @@ public class AvitoParseViewModelTest {
     private ApiRepository apiRepository;
     @Mock
     private SchedulersProvider schedulersProvider;
+    @Mock
+    private CarCellDAO carCellDAO;
+    @Mock
+    private CarDAO carDAO;
 
     @Mock
     private Observer<Boolean> isInProgressCellsLoadingObserver;
@@ -57,7 +63,7 @@ public class AvitoParseViewModelTest {
         when(schedulersProvider.io()).thenReturn(Schedulers.trampoline());
         when(schedulersProvider.ui()).thenReturn(Schedulers.trampoline());
 
-        avitoParseViewModel = new AvitoParseViewModel(apiRepository, schedulersProvider);
+        avitoParseViewModel = new AvitoParseViewModel(apiRepository, schedulersProvider, carCellDAO, carDAO);
 
         avitoParseViewModel.getIsInProgressCellsLoading().observeForever(isInProgressCellsLoadingObserver);
         avitoParseViewModel.getIsErrorAtCellsLoading().observeForever(isErrorAtCellsLoadingObserver);

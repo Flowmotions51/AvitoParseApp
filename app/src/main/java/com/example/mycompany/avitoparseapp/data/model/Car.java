@@ -3,17 +3,26 @@ package com.example.mycompany.avitoparseapp.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+
 import java.util.List;
 import java.util.Objects;
 
+@Entity(tableName = "CARITEM")
 public class Car implements Parcelable {
     private String carName;
     private String mainPhotoLink;
     private String telephonePhotoLink;
     private List<String> photoLinks;
 
-    private String phone;
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    public int id;
 
+    private String phone;
     private String carDescription;
 
     public Car(String carName, String mainPhotoLink, String telephonePhotoLink, List<String> photoLinks,

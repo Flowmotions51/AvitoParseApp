@@ -3,19 +3,31 @@ package com.example.mycompany.avitoparseapp.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity(tableName = "CARCELL")
+@Entity(tableName = "CARCELL", indices = {@Index(value = "id", unique = true),
+        @Index(value = "carId", unique = true)})
 public class CarCell implements Parcelable {
     private String previewImageUrl;
     private String firstImgUrl;
     private String linkToItem;
     private String carName;
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name="id")
     public int id;
+
+    public void setCarId(int carId) {
+        this.carId = carId;
+    }
+
+    @ColumnInfo(name="carId")
+    public int carId;
+
 
     private boolean isFavorite;
 

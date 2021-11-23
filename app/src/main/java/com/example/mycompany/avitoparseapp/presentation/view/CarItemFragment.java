@@ -78,7 +78,7 @@ public class CarItemFragment extends Fragment implements RemoveFavoriteFromCarIt
             isProgressVisible(false);
         }
         mBinding.addItemToFavoritesBtn.setOnClickListener(v -> {
-            avitoParseViewModel.addCarToFavorites(carCell);
+            avitoParseViewModel.addCarToFavorites(carCell, car);
             if(avitoParseViewModel.getCarCellsFavorites().contains(carCell)) {
                 for (Fragment f : getParentFragmentManager().getFragments()) {
                     if (f instanceof SetCellFavorite) {

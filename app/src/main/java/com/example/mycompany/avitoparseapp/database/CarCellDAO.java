@@ -10,7 +10,7 @@ import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import java.util.List;
 
 @Dao
-public interface DAO {
+public interface CarCellDAO {
 
     @Query("SELECT * FROM CARCELL ORDER BY id DESC")
     List<CarCell> getAllRecordsFromDb();
@@ -23,5 +23,8 @@ public interface DAO {
 
     @Query("SELECT COUNT(*) FROM CARCELL WHERE linkToItem = :link")
     int selectCountByLinkItem(String link);
+
+    @Query("SELECT carId FROM CARCELL WHERE linkToItem = :link")
+    int selectCarIdByLinkItem(String link);
 
 }
