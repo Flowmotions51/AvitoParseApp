@@ -3,17 +3,32 @@ package com.example.mycompany.avitoparseapp.di.modules;
 import android.app.Application;
 import android.content.Context;
 
+import javax.inject.Singleton;
+
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 
 @Module
-public abstract class ContextModule {
-    private final Context context;
+public class ContextModule {
+//    private final Context context;
+//
+//    public ContextModule(Context context) {
+//        this.context = context;
+//    }
+//
+//    @Binds
+//    abstract Context bindContext(Application application);
 
-    public ContextModule(Context context) {
-        this.context = context;
+    Application mApplication;
+
+    public ContextModule(Application application) {
+        mApplication = application;
     }
 
-    @Binds
-    abstract Context bindContext(Application application);
+    @Provides
+    @Singleton
+    Application providesApplication() {
+        return mApplication;
+    }
 }

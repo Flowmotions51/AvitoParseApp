@@ -8,10 +8,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/errorLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -20,7 +16,11 @@
         android:focusable="true"
         android:gravity="center"
         android:translationZ="92dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/errorText"
@@ -35,17 +35,17 @@
 
     <RelativeLayout
         android:id="@+id/progressframelayout_car"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:translationZ="90dp"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="gone">
+        android:translationZ="90dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ProgressBar
             android:id="@+id/progress_bar_car"
@@ -63,17 +63,17 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
     </RelativeLayout>
 
-        <com.example.mycompany.avitoparseapp.presentation.view.adapter.VerticalViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="visible"
-            android:background="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/itemName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:spanCount="1" />
+    <com.example.mycompany.avitoparseapp.presentation.view.adapter.VerticalViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/itemName"
+        app:layout_constraintEnd_toStartOf="@+id/scrollView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:spanCount="1" />
 
     <TextView
         android:id="@+id/itemName"
@@ -91,17 +91,16 @@
 
     <Button
         android:id="@+id/addItemToFavoritesBtn"
-        app:tint="@color/yellow"
-        app:layout_constraintStart_toEndOf="@+id/itemName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_pager"
-        app:layout_constraintBottom_toTopOf="@+id/phone"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="right"
         android:layout_weight="1"
         android:background="@drawable/addtofavoritebuttonstate"
-        android:text="" />
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/phone"
+        app:layout_constraintEnd_toStartOf="@+id/scrollView"
+        app:layout_constraintStart_toEndOf="@+id/itemName"
+        app:layout_constraintTop_toBottomOf="@+id/view_pager" />
 
 
     <TextView
@@ -112,10 +111,12 @@
         android:gravity="center"
         android:text="+799999999"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/scrollView"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemName" />
+        app:layout_constraintTop_toBottomOf="@+id/view_pager"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -123,16 +124,16 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone">
+        app:layout_constraintStart_toEndOf="@+id/view_pager"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/carDescription"
-            android:textSize="20dp"
-            android:padding="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="description" />
+            android:padding="20dp"
+            android:text="description"
+            android:textSize="20dp" />
     </ScrollView>
 
 

@@ -3,13 +3,19 @@ package com.example.mycompany.avitoparseapp.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.Objects;
 
+@Entity(tableName = "CARCELL")
 public class CarCell implements Parcelable {
     private String previewImageUrl;
     private String firstImgUrl;
     private String linkToItem;
     private String carName;
+    @PrimaryKey(autoGenerate = true)
+    public int id;
 
     private boolean isFavorite;
 

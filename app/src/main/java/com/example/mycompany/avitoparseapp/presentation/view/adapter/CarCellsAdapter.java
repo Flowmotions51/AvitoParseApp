@@ -16,6 +16,7 @@ import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.utils.IOnCarCellAction;
 import com.example.mycompany.avitoparseapp.R;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -85,8 +86,8 @@ public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarIma
         }
 
         public void setImageByUrl(String url) {
-            Picasso.get().load(url)
-                    //.placeholder(R.drawable.progress_animation)
+            Picasso.get()
+                    .load(url)
                     .into(imageView);
         }
 

@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.databinding.CarFavoritesFragmentLayoutBinding;
-import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarCellsAdapter;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarFavoritesAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 import com.example.mycompany.avitoparseapp.utils.ItemTouchHelperAdapter;
+import com.example.mycompany.avitoparseapp.utils.RemoveFavoriteFromCarItem;
 import com.example.mycompany.avitoparseapp.utils.SetCellFavorite;
 
 import java.util.ArrayList;
@@ -81,8 +81,8 @@ public class CarFavoritesFragment extends Fragment implements ItemTouchHelperAda
                         ((SetCellFavorite) (f))
                                 .setCellFavorite(carCell, false);
                     }
-                    if(f instanceof CarItemFragment) {
-                        ((CarItemFragment)f).setFavoritesButton(false);
+                    if(f instanceof RemoveFavoriteFromCarItem) {
+                        ((RemoveFavoriteFromCarItem)f).removeFavoriteItemFromCar();
                     }
                 }
                 recyclerViewCarCellsAdapter.notifyItemRemoved(itemPosition);

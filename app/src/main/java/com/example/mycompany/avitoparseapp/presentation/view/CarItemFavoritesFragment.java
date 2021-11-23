@@ -14,13 +14,16 @@ import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.databinding.CarItemFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarItemPhotosAdapter;
+import com.example.mycompany.avitoparseapp.presentation.view.adapter.ItemImagesViewPagerAdapter;
+import com.example.mycompany.avitoparseapp.presentation.view.adapter.VerticalViewPager;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 
 public class CarItemFavoritesFragment extends Fragment {
     private static final String CAR_CELL_PARAM = "CarCellFav";
     private CarItemFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
-    private CarItemPhotosAdapter carItemPhotosAdapter;
+    private VerticalViewPager imageItemViewPager;
+    private ItemImagesViewPagerAdapter itemImagesViewPagerAdapter;
     private CarCell carCell;
     private Car car;
 
@@ -40,8 +43,9 @@ public class CarItemFavoritesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        carItemPhotosAdapter = new CarItemPhotosAdapter();
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
+        imageItemViewPager = mBinding.viewPager;
+        mBinding.addItemToFavoritesBtn.setVisibility(View.GONE);
         if (savedInstanceState == null) {
             carCell = (CarCell) getArguments().get("CarCellFav");
             avitoParseViewModel.getIsErrorAtFavoriteItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
@@ -49,10 +53,10 @@ public class CarItemFavoritesFragment extends Fragment {
             avitoParseViewModel.getIsInProgressFavoriteItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
             avitoParseViewModel.loadCarItemFavoriteData(carCell);
         } else {
-            carCell = (CarCell) savedInstanceState.getParcelable("CarCellFav");
-            car = (Car) savedInstanceState.getParcelable("CarItemFav");
-            carItemPhotosAdapter.setPhotoLinks(car.getPhotoLinks());
-//            mBinding.recyclerView.setAdapter(carItemPhotosAdapter);
+            carCell = savedInstanceState.getParcelable("CarCellFav");
+            car = savedInstanceState.getParcelable("CarItemFav");
+            itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
+            imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
             mBinding.itemName.setText(car.getCarName());
             mBinding.carDescription.setText(car.getCarDescription());
             showErrorDialog(false);
@@ -73,10 +77,11 @@ public class CarItemFavoritesFragment extends Fragment {
     public void carInfoReceived(Car car) {
         this.car = car;
         mBinding.errorLayout.setVisibility(View.GONE);
-//        carItemPhotosAdapter.setPhotoLinks(car.getPhotoLinks());
-//        mBinding.recyclerView.setAdapter(carItemPhotosAdapter);
+        itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
+        imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
         mBinding.itemName.setText(car.getCarName());
         mBinding.carDescription.setText(car.getCarDescription());
+        mBinding.phone.setText(car.getPhone());
     }
 
     public static CarItemFavoritesFragment newInstance(CarCell carCell) {

@@ -1,0 +1,26 @@
+package com.example.mycompany.avitoparseapp.database;
+
+import android.content.Context;
+
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+
+import com.example.mycompany.avitoparseapp.data.model.CarCell;
+
+@Database(entities = {CarCell.class}, version = 2, exportSchema = false)
+public abstract class AppDatabase extends RoomDatabase {
+
+    private static AppDatabase dbInstance;
+
+    public abstract DAO getDao();
+
+    public static AppDatabase getAppDatabase(Context context) {
+        if(dbInstance == null) {
+            dbInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "AppDb")
+                    .allowMainThreadQueries()
+                    .build();
+        }
+        return dbInstance;
+    }
+}

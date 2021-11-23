@@ -4,24 +4,25 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.mycompany.avitoparseapp.api.SchedulersProvider;
 import com.example.mycompany.avitoparseapp.data.model.Brand;
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
 import com.example.mycompany.avitoparseapp.data.model.Model;
 import com.example.mycompany.avitoparseapp.data.repository.ApiRepository;
-import com.example.mycompany.avitoparseapp.api.SchedulersProvider;
+import com.example.mycompany.avitoparseapp.database.DAO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class AvitoParseViewModel extends ViewModel {
+    private DAO dao;
+
     /**
      * CarBrandPickerFragment liveData
      */
@@ -97,7 +98,7 @@ public class AvitoParseViewModel extends ViewModel {
     private MutableLiveData<List<CarCell>> carFavoritesCellsData = new MutableLiveData<>();
 
     public List<CarCell> getCarCellsFavorites() {
-        return carCellsFavorites;
+        return dao.getAllRecordsFromDb();
     }
     public void setCarCellsFavorites(List<CarCell> carCellsFavorites) {
         this.carCellsFavorites = carCellsFavorites;
@@ -130,9 +131,10 @@ public class AvitoParseViewModel extends ViewModel {
 
 
     @Inject
-    public AvitoParseViewModel(ApiRepository apiRepository, SchedulersProvider schedulersProvider) {
+    public AvitoParseViewModel(ApiRepository apiRepository, SchedulersProvider schedulersProvider, DAO dao) {
         this.apiRepository = apiRepository;
         this.schedulersProvider = schedulersProvider;
+        this.dao = dao;
     }
 
     public void loadBrandsData() {
@@ -176,8 +178,7 @@ public class AvitoParseViewModel extends ViewModel {
      * @param carCell - выбранное объявление из списка, который был получен в loadCellsData(String params)
      */
     public void loadCarItemData(CarCell carCell) {
-        //todo
-        String link = carCell.getLinkToItem().substring(carCell.getLinkToItem().lastIndexOf('/') + 1);
+        String link = carCell.getLinkToItem();
         isInProgressItemLoading.setValue(true);
         isErrorAtItemLoading.setValue(false);
         compositeDisposable.add(apiRepository.getCar(link)
@@ -206,17 +207,19 @@ public class AvitoParseViewModel extends ViewModel {
     }
 
     public void loadCarFav() {
-        carFavoritesCellsData.setValue(carCellsFavorites);
+        carFavoritesCellsData.setValue(dao.getAllRecordsFromDb());
         isInProgressCellsLoading.setValue(false);
     }
 
     public void addCarToFavorites(CarCell carCell) {
-        if (!carCellsFavorites.contains(carCell)) {
-            carCellsFavorites.add(carCell);
-            carFavoritesCellsData.postValue(carCellsFavorites);
+        if (dao.selectCountByLinkItem(carCell.getLinkToItem()) == 0) {
+            dao.insertRecord(new CarCell(carCell.getPreviewImageUrl(),
+                    carCell.getFirstImgUrl(), carCell.getLinkToItem(),
+                    carCell.getCarName()));
+            carFavoritesCellsData.postValue(dao.getAllRecordsFromDb());
         } else {
-            carCellsFavorites.remove(carCell);
-            carFavoritesCellsData.postValue(carCellsFavorites);
+            dao.deleteByLink(carCell.getLinkToItem());
+            carFavoritesCellsData.postValue(dao.getAllRecordsFromDb());
         }
     }
 

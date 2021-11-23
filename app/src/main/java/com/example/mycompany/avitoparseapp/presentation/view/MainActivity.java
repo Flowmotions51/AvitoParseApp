@@ -2,7 +2,6 @@ package com.example.mycompany.avitoparseapp.presentation.view;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.mycompany.avitoparseapp.BaseApplication;
 import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
+import com.example.mycompany.avitoparseapp.database.DAO;
 import com.example.mycompany.avitoparseapp.databinding.ActivityMainBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.ViewPagerAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
+//
+//    @Inject
+//    DAO dao;
 
     private AvitoParseViewModel avitoParseViewModel;
 
@@ -53,25 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         avitoParseViewModel
                 = new ViewModelProvider(this, viewModelFactory).get(AvitoParseViewModel.class);
-//
-//        avitoParseViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
-//            @NonNull
-//            @Override
-//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                return (T) new AvitoParseViewModel(parserRepository);
-//            }
-//        }).get(AvitoParseViewModel.class);
-
-
-//        Parser parser = new Parser();
-//        ParserRepository parserRepository = new ParserRepository(parser);
-//        avitoParseViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
-//            @NonNull
-//            @Override
-//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                return (T) new AvitoParseViewModel(parserRepository);
-//            }
-//        }).get(AvitoParseViewModel.class);
         viewPager2 = mBinding.viewPager;
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle());
         viewPager2.setAdapter(viewPagerAdapter);
@@ -96,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("CarCellsFavorites", "");
-        if(!json.equals("")) {
+        if (!json.equals("")) {
             List<LinkedTreeMap> linkedTreeMaps = gson.fromJson(json, ArrayList.class);
             List<CarCell> carCells = new ArrayList<>();
-            for(LinkedTreeMap map : linkedTreeMaps) {
+            for (LinkedTreeMap map : linkedTreeMaps) {
                 String previewImageUrl = (String) map.get("previewImageUrl");
                 String firstImgUrl = (String) map.get("firstImgUrl");
                 String linkToItem = (String) map.get("linkToItem");
@@ -129,16 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    @Override
-    protected void onStop() {
-        List<CarCell> carCellsFavorites = avitoParseViewModel.getCarCellsFavorites();
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(carCellsFavorites);
-        editor.putString("CarCellsFavorites", json);
-        editor.commit();
-        super.onStop();
+    public SharedPreferences getMySharedPreferences() {
+        return getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
     }
-
 }
