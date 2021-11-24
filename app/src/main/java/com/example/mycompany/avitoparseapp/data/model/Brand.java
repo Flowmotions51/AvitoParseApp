@@ -20,8 +20,4 @@ public class Brand {
     public String getLink() {
         return brandModelsLink;
     }
-
-    public void setBrandModelsLink(String brandModelsLink) {
-        this.brandModelsLink = brandModelsLink;
-    }
 }

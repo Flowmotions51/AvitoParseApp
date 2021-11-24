@@ -56,7 +56,6 @@ public class CarModelPickerFragment extends Fragment {
         adapter.setAction(model -> CarModelPickerFragment.this.getParentFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .addToBackStack("CarCellsFragment")
                 .add(container.getId(), CarCellsFragment.newInstance(brand, model), getTag())
                 .commit());
     }

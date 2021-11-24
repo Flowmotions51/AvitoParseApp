@@ -19,15 +19,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.databinding.CarItemFragmentLayoutBinding;
-import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarItemPhotosAdapter;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.ItemImagesViewPagerAdapter;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.VerticalViewPager;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
-import com.example.mycompany.avitoparseapp.utils.RemoveFavoriteFromCarItem;
-import com.example.mycompany.avitoparseapp.utils.SetCellFavorite;
 
-public class CarItemFragment extends Fragment implements RemoveFavoriteFromCarItem {
+public class CarItemFragment extends Fragment {
     private static final String CAR_CELL_PARAM = "CarCell";
+    private static final String IS_FAVORITES_ACTIVATED_PARAM = "IsFavoritesActivated";
+    private static final String CAR_ITEM_PARAM = "CarItem";
     private CarItemFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private VerticalViewPager imageItemViewPager;
@@ -59,17 +58,24 @@ public class CarItemFragment extends Fragment implements RemoveFavoriteFromCarIt
             carCell = (CarCell) getArguments().get("CarCell");
             if(carCell.isFavorite()) {
                 mBinding.addItemToFavoritesBtn.setActivated(true);
-                mBinding.addItemToFavoritesBtn.setSelected(true);
+            } else {
+                mBinding.addItemToFavoritesBtn.setActivated(false);
             }
+            avitoParseViewModel.newToggleCarItemFavoritesButton();
+            avitoParseViewModel.getToggleCarItemFavoritesButton().observe(getViewLifecycleOwner(), this::toggleItemFavoriteButton);
+
             avitoParseViewModel.getIsErrorAtItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
             avitoParseViewModel.getCarItemData().observe(getViewLifecycleOwner(), this::carInfoReceived);
             avitoParseViewModel.getIsInProgressItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
+
             avitoParseViewModel.loadCarItemData(carCell);
         } else {
-            carCell = savedInstanceState.getParcelable("CarCell");
-            car = savedInstanceState.getParcelable("CarItem");
-            mBinding.addItemToFavoritesBtn.setActivated(savedInstanceState.getBoolean("IsFavoritesActivated"));
-            mBinding.addItemToFavoritesBtn.setSelected(savedInstanceState.getBoolean("IsFavoritesActivated"));
+            avitoParseViewModel.newToggleCarItemFavoritesButton();
+            avitoParseViewModel.getToggleCarItemFavoritesButton().observe(getViewLifecycleOwner(), this::toggleItemFavoriteButton);
+
+            carCell = savedInstanceState.getParcelable(CAR_CELL_PARAM);
+            car = savedInstanceState.getParcelable(CAR_ITEM_PARAM);
+            mBinding.addItemToFavoritesBtn.setActivated(savedInstanceState.getBoolean(IS_FAVORITES_ACTIVATED_PARAM));
             itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
             imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
             mBinding.itemName.setText(car.getCarName());
@@ -78,24 +84,7 @@ public class CarItemFragment extends Fragment implements RemoveFavoriteFromCarIt
             isProgressVisible(false);
         }
         mBinding.addItemToFavoritesBtn.setOnClickListener(v -> {
-            avitoParseViewModel.addCarToFavorites(carCell, car);
-            if(avitoParseViewModel.getCarCellsFavorites().contains(carCell)) {
-                for (Fragment f : getParentFragmentManager().getFragments()) {
-                    if (f instanceof SetCellFavorite) {
-                        mBinding.addItemToFavoritesBtn.setActivated(true);
-                        mBinding.addItemToFavoritesBtn.setSelected(true);
-                        ((SetCellFavorite) (f)).setCellFavorite(carCell, true);
-                    }
-                }
-            } else {
-                for (Fragment f : getParentFragmentManager().getFragments()) {
-                    if (f instanceof SetCellFavorite) {
-                        mBinding.addItemToFavoritesBtn.setActivated(false);
-                        mBinding.addItemToFavoritesBtn.setSelected(false);
-                        ((SetCellFavorite) (f)).setCellFavorite(carCell, false);
-                    }
-                }
-            }
+            avitoParseViewModel.insertOrDeleteIfExist(carCell);
         });
 
         mBinding.phone.setOnClickListener(v -> {
@@ -111,11 +100,11 @@ public class CarItemFragment extends Fragment implements RemoveFavoriteFromCarIt
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable("CarItem", car);
+        outState.putParcelable(CAR_ITEM_PARAM, car);
         if(addItemToFavoriteBtn != null) {
-            outState.putBoolean("IsFavoritesActivated", addItemToFavoriteBtn.isSelected());
+            outState.putBoolean(IS_FAVORITES_ACTIVATED_PARAM, addItemToFavoriteBtn.isActivated());
         }
-        outState.putParcelable("CarCell", carCell);
+        outState.putParcelable(CAR_CELL_PARAM, carCell);
         super.onSaveInstanceState(outState);
     }
 
@@ -146,7 +135,14 @@ public class CarItemFragment extends Fragment implements RemoveFavoriteFromCarIt
     }
 
     @Override
-    public void removeFavoriteItemFromCar() {
-        mBinding.addItemToFavoritesBtn.setActivated(false);
+    public void onDestroyView() {
+        super.onDestroyView();
+        avitoParseViewModel.getToggleCarItemFavoritesButton().removeObservers(getActivity());
+    }
+
+    private void toggleItemFavoriteButton(CarCell cell) {
+        if(cell.getLinkToItem().equals(carCell.getLinkToItem())) {
+            mBinding.addItemToFavoritesBtn.setActivated(!mBinding.addItemToFavoritesBtn.isActivated());
+        }
     }
 }

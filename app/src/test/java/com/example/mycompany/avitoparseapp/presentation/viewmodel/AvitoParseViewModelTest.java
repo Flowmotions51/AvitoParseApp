@@ -10,10 +10,8 @@ import androidx.lifecycle.Observer;
 import com.example.mycompany.avitoparseapp.api.SchedulersProvider;
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
-import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
 import com.example.mycompany.avitoparseapp.data.repository.ApiRepository;
-import com.example.mycompany.avitoparseapp.database.CarCellDAO;
-import com.example.mycompany.avitoparseapp.database.CarDAO;
+import com.example.mycompany.avitoparseapp.data.repository.DataBaseRepository;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,6 +22,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -38,16 +37,14 @@ public class AvitoParseViewModelTest {
     @Mock
     private SchedulersProvider schedulersProvider;
     @Mock
-    private CarCellDAO carCellDAO;
-    @Mock
-    private CarDAO carDAO;
+    private DataBaseRepository dataBaseRepository;
 
     @Mock
     private Observer<Boolean> isInProgressCellsLoadingObserver;
     @Mock
     private Observer<Boolean> isErrorAtCellsLoadingObserver;
     @Mock
-    private Observer<GetItemsResponse> carCellsListObserver;
+    private Observer<List<CarCell>> carCellsListObserver;
 
     @Mock
     private Observer<Boolean> isInProgressItemLoadingObserver;
@@ -63,7 +60,7 @@ public class AvitoParseViewModelTest {
         when(schedulersProvider.io()).thenReturn(Schedulers.trampoline());
         when(schedulersProvider.ui()).thenReturn(Schedulers.trampoline());
 
-        avitoParseViewModel = new AvitoParseViewModel(apiRepository, schedulersProvider, carCellDAO, carDAO);
+        avitoParseViewModel = new AvitoParseViewModel(apiRepository, schedulersProvider, dataBaseRepository);
 
         avitoParseViewModel.getIsInProgressCellsLoading().observeForever(isInProgressCellsLoadingObserver);
         avitoParseViewModel.getIsErrorAtCellsLoading().observeForever(isErrorAtCellsLoadingObserver);
@@ -76,46 +73,56 @@ public class AvitoParseViewModelTest {
 
     @Test
     public void testLoadCarCellsData() {
-        when(apiRepository.getCarCells(anyString(), anyString())).thenReturn(Single.just(createCarCellsTestData()));
-        avitoParseViewModel.loadCarCellsData("bmw", "1-seriya", true);
+        List<CarCell> carCells = createCarCellsTestData();
+        when(apiRepository.getCarCells(anyString(), anyString())).thenReturn(Single.just(carCells));
+        avitoParseViewModel.loadCarCellsData("bmw", "1-seriya");
         verify(isInProgressCellsLoadingObserver).onChanged(true);
-        verify(carCellsListObserver).onChanged(createCarCellsTestData());
+        verify(carCellsListObserver).onChanged(carCells);
+        verify(isErrorAtCellsLoadingObserver).onChanged(false);
+    }
+
+    @Test
+    public void testNegativeLoadCarCellsData() {
+        List<CarCell> carCells = createCarCellsTestData();
+        when(apiRepository.getCarCells(anyString(), anyString())).thenReturn(Single.just(carCells));
+        avitoParseViewModel.loadCarCellsData("bmw", "1-seriya");
+        verify(isInProgressCellsLoadingObserver).onChanged(true);
+        verify(carCellsListObserver).onChanged(carCells);
         verify(isErrorAtCellsLoadingObserver).onChanged(false);
     }
 
     @Test
     public void testLoadCarItemData() {
         when(apiRepository.getCar(anyString())).thenReturn(Single.just(createCarItemResponseData()));
-        avitoParseViewModel.loadCarItemData(createCarCellsTestData().getCarCells().get(0));
+        avitoParseViewModel.loadCarItemData(createCarCellsTestData().get(0));
         verify(isInProgressItemLoadingObserver).onChanged(true);
         verify(carItemDataObserver).onChanged(createCarItemResponseData());
         verify(isErrorAtItemLoadingObserver).onChanged(false);
     }
 
     private Car createCarItemResponseData() {
-        Car car = new Car("carName", "mainphotolink",
-                "telephoneLink", Arrays.asList("link", "link2", "link3"),
+        Car car = new Car("name", "link"
+                , Arrays.asList("link", "link2", "link3"),
                 "desc", "phone");
         return car;
     }
 
-    private GetItemsResponse createCarCellsTestData() {
-        GetItemsResponse testData = new GetItemsResponse("Ok", new ArrayList<>(
+    private List<CarCell> createCarCellsTestData() {
+        return new ArrayList<>(
                 Arrays.asList(
                         new CarCell("https://image.com",
                                 "https://image-first.com",
                                 "https://link.com",
-                                "CarName"),
+                                "CarName", "999999"),
                         new CarCell("https://image2.com",
                                 "https://image-first2.com",
                                 "https://link2.com",
-                                "CarName2"),
+                                "CarName2", "999999"),
                         new CarCell("https://image3.com",
                                 "https://image-first3.com",
                                 "https://link3.com",
-                                "CarName3")
+                                "CarName3", "999999")
                 )
-        ));
-        return testData;
+        );
     }
 }

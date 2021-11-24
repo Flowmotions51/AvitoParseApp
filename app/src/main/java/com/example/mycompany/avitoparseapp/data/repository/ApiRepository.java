@@ -3,7 +3,7 @@ package com.example.mycompany.avitoparseapp.data.repository;
 import com.example.mycompany.avitoparseapp.api.ApiService;
 import com.example.mycompany.avitoparseapp.data.model.Brand;
 import com.example.mycompany.avitoparseapp.data.model.Car;
-import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
+import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.data.model.Model;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class ApiRepository {
         this.apiService = apiService;
     }
 
-    public Single<GetItemsResponse> getCarCells(String brand, String model) {
+    public Single<List<CarCell>> getCarCells(String brand, String model) {
         return apiService.getResponseItemList(brand, model);
     }
 

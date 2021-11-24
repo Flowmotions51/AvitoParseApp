@@ -56,7 +56,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/progress_bar_car"
+            android:layout_below="@id/progress_bar_car"
             android:layout_centerHorizontal="true"
             android:padding="10dp"
             android:text="loading..."
@@ -69,7 +69,7 @@
             android:layout_height="0dp"
             android:visibility="visible"
             android:background="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/itemName"
+            app:layout_constraintBottom_toTopOf="@id/itemName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -84,18 +84,18 @@
         android:textColor="@color/black"
         android:textSize="25sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/phone"
-        app:layout_constraintEnd_toStartOf="@+id/addItemToFavoritesBtn"
+        app:layout_constraintBottom_toTopOf="@id/phone"
+        app:layout_constraintEnd_toStartOf="@id/addItemToFavoritesBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_pager" />
+        app:layout_constraintTop_toBottomOf="@id/view_pager" />
 
     <Button
         android:id="@+id/addItemToFavoritesBtn"
         app:tint="@color/yellow"
-        app:layout_constraintStart_toEndOf="@+id/itemName"
+        app:layout_constraintStart_toEndOf="@id/itemName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_pager"
-        app:layout_constraintBottom_toTopOf="@+id/phone"
+        app:layout_constraintTop_toBottomOf="@id/view_pager"
+        app:layout_constraintBottom_toTopOf="@id/phone"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="right"
@@ -112,10 +112,10 @@
         android:gravity="center"
         android:text="+799999999"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView"
+        app:layout_constraintBottom_toTopOf="@id/scrollView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemName" />
+        app:layout_constraintTop_toBottomOf="@id/itemName" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -124,7 +124,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone">
+        app:layout_constraintTop_toBottomOf="@id/phone">
 
         <TextView
             android:id="@+id/carDescription"

@@ -17,16 +17,12 @@ public interface CarDAO {
     @Query("SELECT * FROM CARITEM ORDER BY id DESC")
     List<Car> getAllRecordsFromDb();
 
-    @Query("SELECT id FROM CARITEM WHERE mainPhotoLink = :mainPhotoLink")
-    int getIdFromDbBy(String mainPhotoLink);
+    @Query("SELECT id FROM CARITEM WHERE linkToItem = :linkToItem")
+    int getIdFromDbBy(String linkToItem);
 
     @Insert
     void insertRecord(Car carCellEntity);
 
     @Query("DELETE FROM CARITEM WHERE id = :carId")
     void deleteByCarId(int carId);
-
-    @Query("SELECT * FROM CARITEM WHERE id = :carId")
-    Single<Car> selectByCarId(int carId);
-
 }

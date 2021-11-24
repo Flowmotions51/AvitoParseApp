@@ -17,14 +17,11 @@ import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.databinding.CarFavoritesFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarFavoritesAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
-import com.example.mycompany.avitoparseapp.utils.ItemTouchHelperAdapter;
-import com.example.mycompany.avitoparseapp.utils.RemoveFavoriteFromCarItem;
-import com.example.mycompany.avitoparseapp.utils.SetCellFavorite;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarFavoritesFragment extends Fragment implements ItemTouchHelperAdapter {
+public class CarFavoritesFragment extends Fragment {
     private CarFavoritesFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private CarFavoritesAdapter recyclerViewCarCellsAdapter;
@@ -50,14 +47,13 @@ public class CarFavoritesFragment extends Fragment implements ItemTouchHelperAda
         recyclerViewCarCellsAdapter.setHelper(carCell -> {
             CarFavoritesFragment.this.getParentFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                    .addToBackStack("CarItemFragmentFavs")
                     .add(container.getId(), CarItemFavoritesFragment.newInstance(carCell), getTag())
                     .commit();
         });
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
         avitoParseViewModel.getCarFavoritesCellsData().observe(this.getActivity(), this::showCars);
         if(savedInstanceState == null) {
-            avitoParseViewModel.loadCarFav();
+            avitoParseViewModel.loadCarCellsFavorites();
         } else {
             recyclerViewCarCellsAdapter.setImageUris(savedInstanceState.getParcelableArrayList("CarCellsFavoritesList"));
             recyclerViewCarCellsAdapter.notifyDataSetChanged();
@@ -74,17 +70,7 @@ public class CarFavoritesFragment extends Fragment implements ItemTouchHelperAda
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int itemPosition = viewHolder.getBindingAdapterPosition();
                 CarCell carCell = recyclerViewCarCellsAdapter.getCarCells().get(itemPosition);
-                avitoParseViewModel.removeCarFromFavorites(carCell);
-                for (Fragment f : getActivity().getSupportFragmentManager()
-                        .getFragments().get(0).getChildFragmentManager().getFragments()) {
-                    if (f instanceof SetCellFavorite) {
-                        ((SetCellFavorite) (f))
-                                .setCellFavorite(carCell, false);
-                    }
-                    if(f instanceof RemoveFavoriteFromCarItem) {
-                        ((RemoveFavoriteFromCarItem)f).removeFavoriteItemFromCar();
-                    }
-                }
+                avitoParseViewModel.insertOrDeleteIfExist(carCell);
                 recyclerViewCarCellsAdapter.notifyItemRemoved(itemPosition);
             }
         };
@@ -103,15 +89,5 @@ public class CarFavoritesFragment extends Fragment implements ItemTouchHelperAda
         if(recyclerViewCarCellsAdapter != null) {
             outState.putParcelableArrayList("CarCellsFavoritesList", new ArrayList<>(recyclerViewCarCellsAdapter.getCarCells()));
         }
-    }
-
-    @Override
-    public void onItemMove(int fromPosition, int toPosition) {
-
-    }
-
-    @Override
-    public void onItemsSwiped(int position) {
-
     }
 }

@@ -8,13 +8,10 @@ import com.example.mycompany.avitoparseapp.api.SchedulersProvider;
 import com.example.mycompany.avitoparseapp.data.model.Brand;
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
-import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
 import com.example.mycompany.avitoparseapp.data.model.Model;
 import com.example.mycompany.avitoparseapp.data.repository.ApiRepository;
-import com.example.mycompany.avitoparseapp.database.CarDAO;
-import com.example.mycompany.avitoparseapp.database.CarCellDAO;
+import com.example.mycompany.avitoparseapp.data.repository.DataBaseRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,22 +19,22 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class AvitoParseViewModel extends ViewModel {
-    private CarCellDAO carCellDao;
-    private CarDAO carDao;
 
     /**
      * CarBrandPickerFragment liveData
      */
-    private MutableLiveData<List<Brand>> brandListData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isInProgressBrandListLoading = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isErrorAtBrandListLoading = new MutableLiveData<>();
+    private final MutableLiveData<List<Brand>> brandListData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isInProgressBrandListLoading = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isErrorAtBrandListLoading = new MutableLiveData<>();
 
     public LiveData<List<Brand>> getBrandListData() {
         return brandListData;
     }
+
     public LiveData<Boolean> getIsInProgressBrandListLoading() {
         return isInProgressBrandListLoading;
     }
+
     public LiveData<Boolean> getIsErrorAtBrandListLoading() {
         return isErrorAtBrandListLoading;
     }
@@ -45,16 +42,18 @@ public class AvitoParseViewModel extends ViewModel {
     /**
      * CarModelPickerFragment liveData
      */
-    private MutableLiveData<List<Model>> modelsListData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isInProgressModelsListLoading = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isErrorAtModelsListLoading = new MutableLiveData<>();
+    private final MutableLiveData<List<Model>> modelsListData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isInProgressModelsListLoading = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isErrorAtModelsListLoading = new MutableLiveData<>();
 
     public LiveData<List<Model>> getModelsListData() {
         return modelsListData;
     }
+
     public LiveData<Boolean> getIsInProgressModelsListLoading() {
         return isInProgressModelsListLoading;
     }
+
     public LiveData<Boolean> getIsErrorAtModelsListLoading() {
         return isErrorAtModelsListLoading;
     }
@@ -62,16 +61,18 @@ public class AvitoParseViewModel extends ViewModel {
     /**
      * CarCellsFragment liveData
      */
-    private MutableLiveData<GetItemsResponse> carCellsMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isInProgressCellsLoading = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isErrorAtCellsLoading = new MutableLiveData<>();
+    private final MutableLiveData<List<CarCell>> carCellsMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isInProgressCellsLoading = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isErrorAtCellsLoading = new MutableLiveData<>();
 
-    public LiveData<GetItemsResponse> getCarCellsMutableLiveData() {
+    public LiveData<List<CarCell>> getCarCellsMutableLiveData() {
         return carCellsMutableLiveData;
     }
+
     public LiveData<Boolean> getIsInProgressCellsLoading() {
         return isInProgressCellsLoading;
     }
+
     public LiveData<Boolean> getIsErrorAtCellsLoading() {
         return isErrorAtCellsLoading;
     }
@@ -79,16 +80,18 @@ public class AvitoParseViewModel extends ViewModel {
     /**
      * CarItemFragment liveData
      */
-    private MutableLiveData<Car> carItemData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isInProgressItemLoading = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isErrorAtItemLoading = new MutableLiveData<>();
+    private final MutableLiveData<Car> carItemData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isInProgressItemLoading = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isErrorAtItemLoading = new MutableLiveData<>();
 
     public LiveData<Car> getCarItemData() {
         return carItemData;
     }
-    public MutableLiveData<Boolean> getIsInProgressItemLoading() {
+
+    public LiveData<Boolean> getIsInProgressItemLoading() {
         return isInProgressItemLoading;
     }
+
     public LiveData<Boolean> getIsErrorAtItemLoading() {
         return isErrorAtItemLoading;
     }
@@ -96,48 +99,52 @@ public class AvitoParseViewModel extends ViewModel {
     /**
      * CarFavoritesFragment liveData
      */
-    private List<CarCell> carCellsFavorites = new ArrayList<>();
-    private MutableLiveData<List<CarCell>> carFavoritesCellsData = new MutableLiveData<>();
+    private final MutableLiveData<List<CarCell>> carFavoritesCellsData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isInProgressFavoritesCellsLoading = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isErrorAtFavoritesCellsLoading = new MutableLiveData<>();
 
-    public List<CarCell> getCarCellsFavorites() {
-        return carCellDao.getAllRecordsFromDb();
-    }
-    public void setCarCellsFavorites(List<CarCell> carCellsFavorites) {
-        this.carCellsFavorites = carCellsFavorites;
-    }
     public LiveData<List<CarCell>> getCarFavoritesCellsData() {
         return carFavoritesCellsData;
+    }
+
+    public LiveData<Boolean> getIsErrorAtFavoritesCellsLoading() {
+        return isErrorAtFavoritesCellsLoading;
+    }
+
+    public LiveData<Boolean> getIsInProgressFavoritesCellsLoading() {
+        return isInProgressFavoritesCellsLoading;
     }
 
     /**
      * CarItemFavoritesFragment liveData
      */
-    private MutableLiveData<Car> carItemDataFavorites = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isInProgressFavoriteItemLoading = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isErrorAtFavoriteItemLoading = new MutableLiveData<>();
+    private final MutableLiveData<Car> carItemDataFavorites = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isInProgressFavoriteItemLoading = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isErrorAtFavoriteItemLoading = new MutableLiveData<>();
 
     public LiveData<Car> getCarItemDataFavorites() {
         return carItemDataFavorites;
     }
-    public MutableLiveData<Boolean> getIsInProgressFavoriteItemLoading() {
+
+    public LiveData<Boolean> getIsInProgressFavoriteItemLoading() {
         return isInProgressFavoriteItemLoading;
     }
+
     public LiveData<Boolean> getIsErrorAtFavoriteItemLoading() {
         return isErrorAtFavoriteItemLoading;
     }
 
-
-    private ApiRepository apiRepository;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private SchedulersProvider schedulersProvider;
+    private final ApiRepository apiRepository;
+    private final DataBaseRepository dataBaseRepository;
+    private final SchedulersProvider schedulersProvider;
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
     @Inject
-    public AvitoParseViewModel(ApiRepository apiRepository, SchedulersProvider schedulersProvider, CarCellDAO carCellDao, CarDAO carDAO) {
+    public AvitoParseViewModel(ApiRepository apiRepository, SchedulersProvider schedulersProvider, DataBaseRepository dataBaseRepository) {
         this.apiRepository = apiRepository;
         this.schedulersProvider = schedulersProvider;
-        this.carCellDao = carCellDao;
-        this.carDao = carDAO;
+        this.dataBaseRepository = dataBaseRepository;
     }
 
     public void loadBrandsData() {
@@ -147,7 +154,7 @@ public class AvitoParseViewModel extends ViewModel {
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressBrandListLoading.setValue(false))
-                .subscribe(val -> brandListData.setValue(val),
+                .subscribe(brandListData::setValue,
                         e -> isErrorAtBrandListLoading.setValue(true)));
     }
 
@@ -158,23 +165,35 @@ public class AvitoParseViewModel extends ViewModel {
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressModelsListLoading.setValue(false))
-                .subscribe(val -> modelsListData.setValue(val),
+                .subscribe(modelsListData::setValue,
                         e -> isErrorAtModelsListLoading.setValue(true)));
     }
 
     /**
      * Метод для получения списка объявлений автомобилей на основе переданных параметров
-     *
      */
-    public void loadCarCellsData(String brand, String model, boolean isProgressBarShowed) {
+    public void loadCarCellsData(String brand, String model) {
         isErrorAtCellsLoading.setValue(false);
-        isInProgressCellsLoading.setValue(isProgressBarShowed);
-                compositeDisposable.add(apiRepository.getCarCells(brand, model)
+        isInProgressCellsLoading.setValue(true);
+        compositeDisposable.add(apiRepository.getCarCells(brand, model)
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressCellsLoading.setValue(false))
-                .subscribe(val -> carCellsMutableLiveData.setValue(val),
+                .subscribe(cells -> {
+                    cells.forEach(c -> checkIfCarCellExistInFavorites(c));
+                    carCellsMutableLiveData.setValue(cells);
+                },
                         e -> isErrorAtCellsLoading.setValue(true)));
+    }
+
+    private void checkIfCarCellExistInFavorites(CarCell cell) {
+        compositeDisposable.add(dataBaseRepository.checkIfCarCellExistInFavorites(cell)
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
+                .subscribe(isFavorite -> {
+                    cell.setFavorite(isFavorite == 1 ? true : false);
+                    carCellsMutableLiveData.setValue(carCellsMutableLiveData.getValue());
+                }));
     }
 
     /**
@@ -190,65 +209,56 @@ public class AvitoParseViewModel extends ViewModel {
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressItemLoading.setValue(false))
-                .subscribe(val -> carItemData.setValue(val),
+                .subscribe(carItemData::setValue,
                         e -> isErrorAtItemLoading.setValue(true)));
     }
 
-    /**
-     * Метод для получения полного объявления автомобиля на основе объекта CarCell
-     *
-     * @param carCell - выбранное объявление из списка, который был получен в loadCellsData(String params)
-     */
-    public void loadCarItemFavoriteData(CarCell carCell) {
-        int carId = carCellDao.selectCarIdByLinkItem(carCell.getLinkToItem());
-
-        //String link = carCell.getLinkToItem().substring(carCell.getLinkToItem().lastIndexOf('/') + 1);
-        isErrorAtFavoriteItemLoading.setValue(false);
-        isInProgressFavoriteItemLoading.setValue(true);
-        compositeDisposable.add(carDao.selectByCarId(carId)
+    public void loadCarCellsFavorites() {
+        compositeDisposable.add(dataBaseRepository.getAllFavoritesCarCells()
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
-                .doAfterTerminate(() -> isInProgressFavoriteItemLoading.setValue(false))
-                .subscribe(val -> carItemDataFavorites.setValue(val),
-                        e -> isErrorAtFavoriteItemLoading.setValue(true)));
+                .doAfterTerminate(() -> isInProgressCellsLoading.setValue(false))
+                .subscribe(carFavoritesCellsData::setValue,
+                        e -> isErrorAtFavoritesCellsLoading.setValue(true)));
     }
 
-    public void loadCarFav() {
-        carFavoritesCellsData.setValue(carCellDao.getAllRecordsFromDb());
-        isInProgressCellsLoading.setValue(false);
+    public void insertOrDeleteIfExist(CarCell cell) {
+        compositeDisposable.add(dataBaseRepository.insertOrDeleteIfExist(cell)
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
+                .subscribe(() -> {
+                            toggleCarItemFavoritesButton.setValue(cell);
+                            markerCarCellsFavorites.setValue(cell);
+                            loadCarCellsFavorites();
+                        },
+                        e -> System.out.println(e.getLocalizedMessage())));
     }
 
-    public void addCarToFavorites(CarCell carCell, Car car) {
-        if (carCellDao.selectCountByLinkItem(carCell.getLinkToItem()) == 0) {
-            carDao.insertRecord(car);
-            int carId = carDao.getIdFromDbBy(car.getMainPhotoLink());
-            CarCell carCellToInsert = new CarCell(carCell.getPreviewImageUrl(),
-                    carCell.getFirstImgUrl(), carCell.getLinkToItem(),
-                    carCell.getCarName());
-            carCellToInsert.setCarId(carId);
-            carCellDao.insertRecord(carCellToInsert);
-            carFavoritesCellsData.postValue(carCellDao.getAllRecordsFromDb());
-        } else {
-            int carId = carCellDao.selectCarIdByLinkItem(carCell.getLinkToItem());
-            carDao.deleteByCarId(carId);
-            carCellDao.deleteByLink(carCell.getLinkToItem());
-            carFavoritesCellsData.postValue(carCellDao.getAllRecordsFromDb());
-        }
+    //for toggle CarCells favorites markers
+    private MutableLiveData<CarCell> markerCarCellsFavorites = new MutableLiveData<>();
+
+    public LiveData<CarCell> getMarkerCarCellsFavorites() {
+        return markerCarCellsFavorites;
     }
 
-    public void removeCarFromFavorites(CarCell carCell) {
-        int carId = carCellDao.selectCarIdByLinkItem(carCell.getLinkToItem());
-        carDao.deleteByCarId(carId);
-        carCellDao.deleteByLink(carCell.getLinkToItem());
-        carFavoritesCellsData.postValue(carCellDao.getAllRecordsFromDb());
+    public void setNewMarkerCarCellsFavorites() {
+        markerCarCellsFavorites = new MutableLiveData<>();
+    }
+
+    //for toggle CarItemFavoriteButton
+    private MutableLiveData<CarCell> toggleCarItemFavoritesButton = new MutableLiveData<>();
+
+    public LiveData<CarCell> getToggleCarItemFavoritesButton() {
+        return toggleCarItemFavoritesButton;
+    }
+
+    public void newToggleCarItemFavoritesButton() {
+        toggleCarItemFavoritesButton = new MutableLiveData<>();
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (compositeDisposable != null && !compositeDisposable.isDisposed()) {
-            compositeDisposable.dispose();
-            compositeDisposable = null;
-        }
+        compositeDisposable.clear();
     }
 }

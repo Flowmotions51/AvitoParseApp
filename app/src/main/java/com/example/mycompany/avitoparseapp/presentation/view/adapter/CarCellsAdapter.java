@@ -1,7 +1,10 @@
 package com.example.mycompany.avitoparseapp.presentation.view.adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycompany.avitoparseapp.databinding.CarCellLayoutBinding;
@@ -19,6 +23,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.Base64;
 import java.util.List;
 
 public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarImageViewHolder> {
@@ -44,8 +49,10 @@ public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarIma
                 .inflate(R.layout.car_cell_layout, parent, false));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull CarImageViewHolder holder, int position) {
+        holder.setPrice(carCells.get(holder.getBindingAdapterPosition()).getPrice());
         holder.setImageByUrl(carCells.get(holder.getBindingAdapterPosition()).getPreviewImageUrl());
         holder.setDescription(carCells.get(holder.getBindingAdapterPosition()).getCarName());
         holder.setOnCLickListener(v -> helper.action(carCells.get(holder.getBindingAdapterPosition())));
@@ -70,6 +77,7 @@ public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarIma
         private ImageView imageView;
         private ImageView isCellFavoriteImage;
         private TextView textView;
+        private TextView textPrice;
 
         private CarCellLayoutBinding mBinding;
 
@@ -79,13 +87,22 @@ public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarIma
             imageView = mBinding.carImagePlaceholder;
             textView = mBinding.carDescription;
             isCellFavoriteImage = mBinding.isCellFavoriteImage;
+            textPrice = mBinding.price;
+        }
+
+        public void setPrice(String price) {
+            textPrice.setText(price);
         }
 
         public void setOnCLickListener(View.OnClickListener listener) {
             imageView.setOnClickListener(listener);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public void setImageByUrl(String url) {
+//            byte[] decodedString = Base64.getDecoder().decode(url);
+//            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//            imageView.setImageBitmap(decodedByte);
             Picasso.get()
                     .load(url)
                     .into(imageView);

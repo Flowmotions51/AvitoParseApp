@@ -14,12 +14,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
-import com.example.mycompany.avitoparseapp.data.model.GetItemsResponse;
 import com.example.mycompany.avitoparseapp.databinding.CarCellsFragmentLayoutBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarCellsAdapter;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.WrapContentGridLayoutManager;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
-import com.example.mycompany.avitoparseapp.utils.SetCellFavorite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ import java.util.List;
 /**
  * Фрагмент для отображения объявлений, согласено выбранным параметрам
  */
-public class CarCellsFragment extends Fragment implements SetCellFavorite {
+public class CarCellsFragment extends Fragment {
     private static final String MODEL_PARAM = "Model";
     private static final String BRAND_PARAM = "Brand";
     private CarCellsFragmentLayoutBinding mBinding;
@@ -62,26 +60,27 @@ public class CarCellsFragment extends Fragment implements SetCellFavorite {
         swipeRefreshLayout = mBinding.swiperLayout;
         recyclerViewCarCellsAdapter = new CarCellsAdapter();
         mBinding.recyclerView.setLayoutManager(
-                new WrapContentGridLayoutManager(getActivity(), 2,  LinearLayoutManager.VERTICAL, false));
+                new WrapContentGridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
         recyclerViewCarCellsAdapter.setHelper(carCell ->
                 CarCellsFragment.this
                         .getParentFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                        .addToBackStack("CarItemFragment")
                         .add(container.getId(), CarItemFragment.newInstance(carCell), getTag())
                         .commit()
         );
         avitoParseViewModel = new ViewModelProvider(this.getActivity()).get(AvitoParseViewModel.class);
         carBrand = getArguments().getString("Brand");
         carModel = getArguments().getString("Model");
-        avitoParseViewModel.getIsInProgressCellsLoading().observe(this.getActivity(), this::isProgressVisible);
-        avitoParseViewModel.getCarCellsMutableLiveData().observe(this.getActivity(), this::showCars);
-        avitoParseViewModel.getIsErrorAtCellsLoading().observe(this.getActivity(), this::showErrorDialog);
+        avitoParseViewModel.getIsInProgressCellsLoading().observe(getActivity(), this::isProgressVisible);
+        avitoParseViewModel.getCarCellsMutableLiveData().observe(getActivity(), this::showCars);
+        avitoParseViewModel.getIsErrorAtCellsLoading().observe(getActivity(), this::showErrorDialog);
+
+        avitoParseViewModel.getMarkerCarCellsFavorites().observe(getActivity(), this::setFavoriteMutubleLiveData);
 
         swipeRefreshLayout.setOnRefreshListener(() ->
-                avitoParseViewModel.loadCarCellsData(carBrand, carModel, false));
-        if(savedInstanceState == null) {
-            avitoParseViewModel.loadCarCellsData(carBrand, carModel, true);
+                avitoParseViewModel.loadCarCellsData(carBrand, carModel));
+        if (savedInstanceState == null) {
+            avitoParseViewModel.loadCarCellsData(carBrand, carModel);
         } else {
             recyclerViewCarCellsAdapter.setImageUris(savedInstanceState.getParcelableArrayList("CarCellsList"));
             recyclerViewCarCellsAdapter.notifyDataSetChanged();
@@ -96,34 +95,39 @@ public class CarCellsFragment extends Fragment implements SetCellFavorite {
         mBinding.progressframelayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
-    private void showCars(GetItemsResponse getItemsResponse) {
-        if(getItemsResponse.getCarCells() != null) {
-            List<CarCell> carCellsFavorites = avitoParseViewModel.getCarCellsFavorites();
-            for(CarCell cell : getItemsResponse.getCarCells()) {
-                if(carCellsFavorites.contains(cell)) {
-                    cell.setFavorite(true);
-                }
-            }
-            recyclerViewCarCellsAdapter.setImageUris(getItemsResponse.getCarCells());
-            mBinding.recyclerView.setAdapter(recyclerViewCarCellsAdapter);
-            swipeRefreshLayout.setRefreshing(false);
-
-        }
+    private void showCars(List<CarCell> carCells) {
+        recyclerViewCarCellsAdapter.setImageUris(carCells);
+        mBinding.recyclerView.setAdapter(recyclerViewCarCellsAdapter);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(recyclerViewCarCellsAdapter != null && recyclerViewCarCellsAdapter.getCarCells() != null) {
+        if (recyclerViewCarCellsAdapter != null && recyclerViewCarCellsAdapter.getCarCells() != null) {
             outState.putParcelableArrayList("CarCellsList", new ArrayList<>(recyclerViewCarCellsAdapter.getCarCells()));
         }
     }
 
+    public void receiveInfoAboutFavoriteStatus(String linkToItem) {
+        recyclerViewCarCellsAdapter.getCarCells().forEach(cell -> {
+            if(cell.getLinkToItem().equals(linkToItem)) {
+                cell.setFavorite(true);
+            }
+        });
+    }
+
     @Override
-    public void setCellFavorite(CarCell cell, boolean isFavorite) {
-        for(CarCell carCell : recyclerViewCarCellsAdapter.getCarCells()) {
-            if(carCell.equals(cell)) {
-                carCell.setFavorite(isFavorite);
+    public void onDestroy() {
+        super.onDestroy();
+        avitoParseViewModel.getMarkerCarCellsFavorites().removeObservers(getActivity());
+        avitoParseViewModel.setNewMarkerCarCellsFavorites();
+    }
+
+    public void setFavoriteMutubleLiveData(CarCell cell) {
+        for (CarCell carCell : recyclerViewCarCellsAdapter.getCarCells()) {
+            if (carCell.getLinkToItem().equals(cell.getLinkToItem())) {
+                carCell.setFavorite(!carCell.isFavorite());
                 recyclerViewCarCellsAdapter.notifyDataSetChanged();
             }
         }

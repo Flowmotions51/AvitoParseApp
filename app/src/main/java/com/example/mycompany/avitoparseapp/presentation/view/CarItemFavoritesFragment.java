@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.databinding.CarItemFragmentLayoutBinding;
-import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarItemPhotosAdapter;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.ItemImagesViewPagerAdapter;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.VerticalViewPager;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
@@ -51,7 +50,7 @@ public class CarItemFavoritesFragment extends Fragment {
             avitoParseViewModel.getIsErrorAtFavoriteItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
             avitoParseViewModel.getCarItemDataFavorites().observe(getViewLifecycleOwner(), this::carInfoReceived);
             avitoParseViewModel.getIsInProgressFavoriteItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
-            avitoParseViewModel.loadCarItemFavoriteData(carCell);
+//            avitoParseViewModel.loadCarItemFavoriteData(carCell);
         } else {
             carCell = savedInstanceState.getParcelable("CarCellFav");
             car = savedInstanceState.getParcelable("CarItemFav");
@@ -62,9 +61,6 @@ public class CarItemFavoritesFragment extends Fragment {
             showErrorDialog(false);
             isProgressVisible(false);
         }
-        mBinding.addItemToFavoritesBtn.setOnClickListener(v -> {
-            avitoParseViewModel.addCarToFavorites(carCell, car);
-        });
     }
 
     @Override

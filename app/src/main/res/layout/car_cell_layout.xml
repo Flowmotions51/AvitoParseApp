@@ -25,7 +25,7 @@
         android:layout_height="150dp"
         android:layout_margin="10dp"
         app:shapeAppearanceOverlay="@style/Theme.AvitoParseApp"
-        app:layout_constraintBottom_toTopOf="@+id/car_description"
+        app:layout_constraintBottom_toTopOf="@id/car_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,10 +37,23 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Item name"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/price"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/car_image_placeholder" />
+        app:layout_constraintTop_toBottomOf="@id/car_image_placeholder" />
+
+    <TextView
+        android:id="@+id/price"
+        android:text="999 999"
+        android:paddingLeft="20dp"
+        android:textSize="25sp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/car_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

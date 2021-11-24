@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
                 .findFragmentByTag("f" + viewPager2.getCurrentItem());
         FragmentManager childFragmentManager = currentViewpagerFragment.getChildFragmentManager();
         if (childFragmentManager.getFragments().size() == 1) {
-            //super.onBackPressed();
             return;
         }
         Fragment topFragment = childFragmentManager.getFragments().get(childFragmentManager.getFragments().size() - 1);
@@ -87,6 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 .commitNow();
         childFragmentManager.beginTransaction()
                 .remove(topFragment)
-                .commit();
+                .commitNow();
     }
 }
