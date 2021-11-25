@@ -78,8 +78,6 @@ public class CarItemFragment extends Fragment {
                 mBinding.itemName.setText(car.getCarName());
                 mBinding.carDescription.setText(car.getCarDescription());
             }
-//            showErrorDialog(false);
-//            isProgressVisible(false);
         }
         mBinding.addItemToFavoritesBtn.setOnClickListener(v -> {
             avitoParseViewModel.insertOrDeleteIfExist(carCell);

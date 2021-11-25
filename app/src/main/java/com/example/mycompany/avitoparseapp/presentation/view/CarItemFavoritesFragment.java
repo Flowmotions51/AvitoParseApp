@@ -51,7 +51,7 @@ public class CarItemFavoritesFragment extends Fragment {
         mBinding.addItemToFavoritesBtn.setVisibility(View.GONE);
         if (savedInstanceState == null) {
             carCell = (CarCell) getArguments().get(CAR_CELL_PARAM);
-//            avitoParseViewModel.loadCarItemFavoriteData(carCell);
+            avitoParseViewModel.loadCarItemFavoriteData(carCell);
         } else {
             carCell = savedInstanceState.getParcelable(CAR_CELL_PARAM);
             car = savedInstanceState.getParcelable(CAR_ITEM_PARAM);

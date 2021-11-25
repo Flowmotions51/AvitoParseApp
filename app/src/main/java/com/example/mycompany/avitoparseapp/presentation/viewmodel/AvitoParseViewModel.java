@@ -266,6 +266,18 @@ public class AvitoParseViewModel extends ViewModel {
                         e -> isErrorAtFavoritesCellsLoading.setValue(true)));
     }
 
+    public void loadCarItemFavoriteData(CarCell carCell) {
+        String link = carCell.getLinkToItem();
+        isInProgressItemLoading.setValue(true);
+        isErrorAtItemLoading.setValue(false);
+        compositeDisposable.add(apiRepository.getCar(link)
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
+                .doAfterTerminate(() -> isInProgressFavoriteItemLoading.setValue(false))
+                .subscribe(carItemDataFavorites::setValue,
+                        e -> isErrorAtFavoriteItemLoading.setValue(true)));
+    }
+
     public void insertOrDeleteIfExist(CarCell cell) {
         compositeDisposable.add(dataBaseRepository.insertOrDeleteIfExist(cell)
                 .subscribeOn(schedulersProvider.io())
