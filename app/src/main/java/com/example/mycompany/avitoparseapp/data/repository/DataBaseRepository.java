@@ -2,7 +2,6 @@ package com.example.mycompany.avitoparseapp.data.repository;
 
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.database.CarCellDAO;
-import com.example.mycompany.avitoparseapp.database.CarDAO;
 
 import java.util.List;
 
@@ -13,12 +12,10 @@ import io.reactivex.Single;
 
 public class DataBaseRepository {
     private CarCellDAO carCellDAO;
-    private CarDAO carDAO;
 
     @Inject
-    DataBaseRepository(CarCellDAO carCellDAO, CarDAO carDAO) {
+    DataBaseRepository(CarCellDAO carCellDAO) {
         this.carCellDAO = carCellDAO;
-        this.carDAO = carDAO;
     }
 
     public Single<List<CarCell>> getAllFavoritesCarCells() {

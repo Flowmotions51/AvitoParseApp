@@ -1,5 +1,6 @@
 package com.example.mycompany.avitoparseapp.presentation.viewmodel;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -16,7 +17,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 
 public class AvitoParseViewModel extends ViewModel {
 
@@ -179,11 +185,49 @@ public class AvitoParseViewModel extends ViewModel {
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressCellsLoading.setValue(false))
-                .subscribe(cells -> {
-                    cells.forEach(c -> checkIfCarCellExistInFavorites(c));
-                    carCellsMutableLiveData.setValue(cells);
-                },
+                .toObservable()
+                .flatMap((Function<List<CarCell>, Observable<CarCell>>) carCells -> {
+                    carCellsMutableLiveData.setValue(carCells);
+                    return Observable.fromIterable(carCells);
+                }).subscribe(cell -> {
+                            checkIfCarCellExistInFavorites(cell);
+                        },
                         e -> isErrorAtCellsLoading.setValue(true)));
+//
+//        Observable<CarCell> carCellObservable = apiRepository.getCarCells(brand, model)
+//                .toObservable()
+//                .flatMap((Function<List<CarCell>, Observable<CarCell>>) carCells -> {
+//                    //carCellsMutableLiveData.setValue(carCells);
+//                    return Observable.fromIterable(carCells);
+//                });
+//
+//        Observable<CarCell> carFavObservable = dataBaseRepository.getAllFavoritesCarCells()
+//                .toObservable()
+//                .flatMap((Function<List<CarCell>, Observable<CarCell>>) carCells -> {
+////                    carCellsMutableLiveData.setValue(carCells);
+//                    return Observable.fromIterable(carCells);
+//                });
+//
+//        compositeDisposable.add(carCellObservable.concatMap(new Function<CarCell, Observable<Boolean>>() {
+//            @Override
+//            public Observable<Boolean> apply(@NonNull CarCell cell) throws Exception {
+//                return carFavObservable.contains(cell).toObservable();
+//            }
+//        }).zipWith(carCellObservable, new BiFunction<Boolean, CarCell, Object>() {
+//            @NonNull
+//            @Override
+//            public Object apply(@NonNull Boolean aBoolean, @NonNull CarCell cell) throws Exception {
+//                cell.setFavorite(aBoolean);
+//                return carCellObservable;
+//            }
+//        })
+//                .subscribeOn(schedulersProvider.io())
+//                .observeOn(schedulersProvider.ui())
+//                .doAfterTerminate(() -> isInProgressCellsLoading.setValue(false))
+//                .subscribe(cell -> {
+//                    System.out.println(cell);
+//                }));
+
     }
 
     private void checkIfCarCellExistInFavorites(CarCell cell) {
@@ -191,7 +235,7 @@ public class AvitoParseViewModel extends ViewModel {
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .subscribe(isFavorite -> {
-                    cell.setFavorite(isFavorite == 1 ? true : false);
+                    cell.setFavorite(isFavorite == 1);
                     carCellsMutableLiveData.setValue(carCellsMutableLiveData.getValue());
                 }));
     }
@@ -230,8 +274,15 @@ public class AvitoParseViewModel extends ViewModel {
                             toggleCarItemFavoritesButton.setValue(cell);
                             markerCarCellsFavorites.setValue(cell);
                             loadCarCellsFavorites();
+
                         },
-                        e -> System.out.println(e.getLocalizedMessage())));
+                        e -> toggleToastUnsuccesfulDatabaseOperation.setValue(true)));
+    }
+
+    private MutableLiveData<Boolean> toggleToastUnsuccesfulDatabaseOperation;
+
+    public LiveData<Boolean> getToggleToastUnsuccesfulDatabaseOperation() {
+        return toggleToastUnsuccesfulDatabaseOperation;
     }
 
     //for toggle CarCells favorites markers

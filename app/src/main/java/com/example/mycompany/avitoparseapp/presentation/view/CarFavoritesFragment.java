@@ -54,12 +54,7 @@ public class CarFavoritesFragment extends Fragment {
         avitoParseViewModel.getCarFavoritesCellsData().observe(this.getActivity(), this::showCars);
         if(savedInstanceState == null) {
             avitoParseViewModel.loadCarCellsFavorites();
-        } else {
-            recyclerViewCarCellsAdapter.setImageUris(savedInstanceState.getParcelableArrayList("CarCellsFavoritesList"));
-            recyclerViewCarCellsAdapter.notifyDataSetChanged();
         }
-
-
         ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -81,13 +76,5 @@ public class CarFavoritesFragment extends Fragment {
     private void showCars(List<CarCell> carCells) {
         recyclerViewCarCellsAdapter.setImageUris(carCells);
         mBinding.recyclerView.setAdapter(recyclerViewCarCellsAdapter);
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if(recyclerViewCarCellsAdapter != null) {
-            outState.putParcelableArrayList("CarCellsFavoritesList", new ArrayList<>(recyclerViewCarCellsAdapter.getCarCells()));
-        }
     }
 }

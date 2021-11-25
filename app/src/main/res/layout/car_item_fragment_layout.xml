@@ -3,77 +3,61 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:clickable="true"
-    android:orientation="vertical">
+    android:background="@color/white">
 
-    <RelativeLayout
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/errorLayout"
+    <FrameLayout
+        android:id="@+id/erroriconwrapper"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@android:color/white"
+        android:background="@color/white"
         android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:translationZ="92dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/errorText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_red_dark"
-            android:gravity="center"
-            android:paddingHorizontal="30dp"
-            android:text="Error loading item"
-            android:textSize="30sp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/progressframelayout_car"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:translationZ="90px"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:translationZ="90dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/erroricon"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:background="@drawable/erroriaconvector"
+            android:backgroundTint="@android:color/holo_red_dark" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
         android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone">
+        android:translationZ="90px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ProgressBar
-            android:id="@+id/progress_bar_car"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:rotation="@integer/material_motion_duration_long_1" />
+    </FrameLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/progress_bar_car"
-            android:layout_centerHorizontal="true"
-            android:padding="10dp"
-            android:text="loading..."
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-    </RelativeLayout>
 
-        <com.example.mycompany.avitoparseapp.presentation.view.adapter.VerticalViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="visible"
-            android:background="@color/white"
-            app:layout_constraintBottom_toTopOf="@id/itemName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:spanCount="1" />
+    <com.example.mycompany.avitoparseapp.presentation.view.adapter.VerticalViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/itemName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:spanCount="1" />
 
     <TextView
         android:id="@+id/itemName"
@@ -84,6 +68,7 @@
         android:textColor="@color/black"
         android:textSize="25sp"
         android:textStyle="bold"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/phone"
         app:layout_constraintEnd_toStartOf="@id/addItemToFavoritesBtn"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,17 +76,17 @@
 
     <Button
         android:id="@+id/addItemToFavoritesBtn"
-        app:tint="@color/yellow"
-        app:layout_constraintStart_toEndOf="@id/itemName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_pager"
-        app:layout_constraintBottom_toTopOf="@id/phone"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="right"
         android:layout_weight="1"
         android:background="@drawable/addtofavoritebuttonstate"
-        android:text="" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/itemName"
+        app:layout_constraintTop_toBottomOf="@id/view_pager"
+        app:tint="@color/yellow" />
 
 
     <TextView
@@ -112,6 +97,7 @@
         android:gravity="center"
         android:text="+799999999"
         android:textSize="30sp"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/scrollView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -121,6 +107,7 @@
         android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -128,12 +115,11 @@
 
         <TextView
             android:id="@+id/carDescription"
-            android:textSize="20dp"
-            android:padding="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="description" />
+            android:padding="20dp"
+            android:text="description"
+            android:textSize="20dp" />
     </ScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

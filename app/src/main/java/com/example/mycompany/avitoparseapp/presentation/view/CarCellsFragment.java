@@ -81,40 +81,23 @@ public class CarCellsFragment extends Fragment {
                 avitoParseViewModel.loadCarCellsData(carBrand, carModel));
         if (savedInstanceState == null) {
             avitoParseViewModel.loadCarCellsData(carBrand, carModel);
-        } else {
-            recyclerViewCarCellsAdapter.setImageUris(savedInstanceState.getParcelableArrayList("CarCellsList"));
-            recyclerViewCarCellsAdapter.notifyDataSetChanged();
         }
     }
 
     private void showErrorDialog(Boolean aBoolean) {
-        mBinding.errorLayout.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+        mBinding.swiperLayout.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
+        mBinding.erroricon.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
     }
 
     private void isProgressVisible(Boolean isVisible) {
-        mBinding.progressframelayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBinding.swiperLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        mBinding.progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void showCars(List<CarCell> carCells) {
         recyclerViewCarCellsAdapter.setImageUris(carCells);
         mBinding.recyclerView.setAdapter(recyclerViewCarCellsAdapter);
         swipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (recyclerViewCarCellsAdapter != null && recyclerViewCarCellsAdapter.getCarCells() != null) {
-            outState.putParcelableArrayList("CarCellsList", new ArrayList<>(recyclerViewCarCellsAdapter.getCarCells()));
-        }
-    }
-
-    public void receiveInfoAboutFavoriteStatus(String linkToItem) {
-        recyclerViewCarCellsAdapter.getCarCells().forEach(cell -> {
-            if(cell.getLinkToItem().equals(linkToItem)) {
-                cell.setFavorite(true);
-            }
-        });
     }
 
     @Override

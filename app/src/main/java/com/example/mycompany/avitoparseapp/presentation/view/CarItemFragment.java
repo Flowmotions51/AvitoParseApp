@@ -54,44 +54,43 @@ public class CarItemFragment extends Fragment {
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
         imageItemViewPager = mBinding.viewPager;
         addItemToFavoriteBtn = mBinding.addItemToFavoritesBtn;
-        if(savedInstanceState == null) {
-            carCell = (CarCell) getArguments().get("CarCell");
-            if(carCell.isFavorite()) {
+        avitoParseViewModel.newToggleCarItemFavoritesButton();
+        avitoParseViewModel.getToggleCarItemFavoritesButton().observe(getViewLifecycleOwner(), this::toggleItemFavoriteButton);
+
+        avitoParseViewModel.getIsErrorAtItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
+        avitoParseViewModel.getCarItemData().observe(getViewLifecycleOwner(), this::carInfoReceived);
+        avitoParseViewModel.getIsInProgressItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
+        if (savedInstanceState == null) {
+            carCell = (CarCell) getArguments().get(CAR_CELL_PARAM);
+            if (carCell.isFavorite()) {
                 mBinding.addItemToFavoritesBtn.setActivated(true);
             } else {
                 mBinding.addItemToFavoritesBtn.setActivated(false);
             }
-            avitoParseViewModel.newToggleCarItemFavoritesButton();
-            avitoParseViewModel.getToggleCarItemFavoritesButton().observe(getViewLifecycleOwner(), this::toggleItemFavoriteButton);
-
-            avitoParseViewModel.getIsErrorAtItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
-            avitoParseViewModel.getCarItemData().observe(getViewLifecycleOwner(), this::carInfoReceived);
-            avitoParseViewModel.getIsInProgressItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
-
             avitoParseViewModel.loadCarItemData(carCell);
         } else {
-            avitoParseViewModel.newToggleCarItemFavoritesButton();
-            avitoParseViewModel.getToggleCarItemFavoritesButton().observe(getViewLifecycleOwner(), this::toggleItemFavoriteButton);
-
             carCell = savedInstanceState.getParcelable(CAR_CELL_PARAM);
             car = savedInstanceState.getParcelable(CAR_ITEM_PARAM);
             mBinding.addItemToFavoritesBtn.setActivated(savedInstanceState.getBoolean(IS_FAVORITES_ACTIVATED_PARAM));
-            itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
-            imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
-            mBinding.itemName.setText(car.getCarName());
-            mBinding.carDescription.setText(car.getCarDescription());
-            showErrorDialog(false);
-            isProgressVisible(false);
+            if (car != null) {
+                itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
+                imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
+                mBinding.itemName.setText(car.getCarName());
+                mBinding.carDescription.setText(car.getCarDescription());
+            }
+//            showErrorDialog(false);
+//            isProgressVisible(false);
         }
         mBinding.addItemToFavoritesBtn.setOnClickListener(v -> {
             avitoParseViewModel.insertOrDeleteIfExist(carCell);
         });
 
+        mBinding.erroricon.setOnClickListener(v -> avitoParseViewModel.loadCarItemData(carCell));
         mBinding.phone.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_CALL);
             String telephone = mBinding.phone.getText().toString();
             intent.setData(Uri.parse("tel:" + telephone));
-            if(ActivityCompat.checkSelfPermission(CarItemFragment.this.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(CarItemFragment.this.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
             startActivity(intent);
@@ -101,7 +100,7 @@ public class CarItemFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(CAR_ITEM_PARAM, car);
-        if(addItemToFavoriteBtn != null) {
+        if (addItemToFavoriteBtn != null) {
             outState.putBoolean(IS_FAVORITES_ACTIVATED_PARAM, addItemToFavoriteBtn.isActivated());
         }
         outState.putParcelable(CAR_CELL_PARAM, carCell);
@@ -110,7 +109,7 @@ public class CarItemFragment extends Fragment {
 
     public void carInfoReceived(Car car) {
         this.car = car;
-        mBinding.errorLayout.setVisibility(View.GONE);
+        mBinding.erroriconwrapper.setVisibility(View.GONE);
         itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
         imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
         mBinding.itemName.setText(car.getCarName());
@@ -127,11 +126,16 @@ public class CarItemFragment extends Fragment {
     }
 
     private void isProgressVisible(Boolean isVisible) {
-        mBinding.progressframelayoutCar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBinding.viewPager.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        mBinding.itemName.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        mBinding.addItemToFavoritesBtn.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        mBinding.phone.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        mBinding.scrollView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        mBinding.progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void showErrorDialog(Boolean aBoolean) {
-        mBinding.errorLayout.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+        mBinding.erroriconwrapper.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -141,7 +145,7 @@ public class CarItemFragment extends Fragment {
     }
 
     private void toggleItemFavoriteButton(CarCell cell) {
-        if(cell.getLinkToItem().equals(carCell.getLinkToItem())) {
+        if (cell.getLinkToItem().equals(carCell.getLinkToItem())) {
             mBinding.addItemToFavoritesBtn.setActivated(!mBinding.addItemToFavoritesBtn.isActivated());
         }
     }

@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 .getAppComponent()
                 .inject(this);
 
-        //getApplicationContext().deleteDatabase("AppDb");
+//        getApplicationContext().deleteDatabase("AppDb");
 
         avitoParseViewModel
                 = new ViewModelProvider(this, viewModelFactory).get(AvitoParseViewModel.class);

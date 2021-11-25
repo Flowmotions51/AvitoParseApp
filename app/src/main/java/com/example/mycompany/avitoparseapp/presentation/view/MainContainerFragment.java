@@ -16,7 +16,6 @@ import java.util.List;
 
 public class MainContainerFragment extends Fragment {
     private MainContainerFragmentLayoutBinding mBinding;
-    private AvitoParseViewModel avitoParseViewModel;
 
     @Nullable
     @Override

@@ -10,14 +10,12 @@ import androidx.room.TypeConverters;
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 
-@Database(entities = {CarCell.class, Car.class}, version = 2, exportSchema = false)
-@TypeConverters({DataConverter.class})
+@Database(entities = {CarCell.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase dbInstance;
 
     public abstract CarCellDAO getDao();
-    public abstract CarDAO getCarDao();
 
     public static AppDatabase getAppDatabase(Context context) {
         if(dbInstance == null) {

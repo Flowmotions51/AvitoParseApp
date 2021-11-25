@@ -1,9 +1,5 @@
 package com.example.mycompany.avitoparseapp.presentation.view.adapter;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mycompany.avitoparseapp.databinding.CarCellLayoutBinding;
-import com.example.mycompany.avitoparseapp.data.model.CarCell;
-import com.example.mycompany.avitoparseapp.utils.IOnCarCellAction;
 import com.example.mycompany.avitoparseapp.R;
-import com.google.android.material.imageview.ShapeableImageView;
-import com.squareup.picasso.Callback;
+import com.example.mycompany.avitoparseapp.data.model.CarCell;
+import com.example.mycompany.avitoparseapp.databinding.CarCellLayoutBinding;
+import com.example.mycompany.avitoparseapp.utils.IOnCarCellAction;
 import com.squareup.picasso.Picasso;
 
-import java.util.Base64;
 import java.util.List;
 
 public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarImageViewHolder> {

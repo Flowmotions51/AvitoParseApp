@@ -19,6 +19,7 @@ import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseView
 
 public class CarItemFavoritesFragment extends Fragment {
     private static final String CAR_CELL_PARAM = "CarCellFav";
+    private static final String CAR_ITEM_PARAM = "CarItemFav";
     private CarItemFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private VerticalViewPager imageItemViewPager;
@@ -44,35 +45,35 @@ public class CarItemFavoritesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
         imageItemViewPager = mBinding.viewPager;
+        avitoParseViewModel.getIsErrorAtFavoriteItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
+        avitoParseViewModel.getCarItemDataFavorites().observe(getViewLifecycleOwner(), this::carInfoReceived);
+        avitoParseViewModel.getIsInProgressFavoriteItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
         mBinding.addItemToFavoritesBtn.setVisibility(View.GONE);
         if (savedInstanceState == null) {
-            carCell = (CarCell) getArguments().get("CarCellFav");
-            avitoParseViewModel.getIsErrorAtFavoriteItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
-            avitoParseViewModel.getCarItemDataFavorites().observe(getViewLifecycleOwner(), this::carInfoReceived);
-            avitoParseViewModel.getIsInProgressFavoriteItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
+            carCell = (CarCell) getArguments().get(CAR_CELL_PARAM);
 //            avitoParseViewModel.loadCarItemFavoriteData(carCell);
         } else {
-            carCell = savedInstanceState.getParcelable("CarCellFav");
-            car = savedInstanceState.getParcelable("CarItemFav");
-            itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
-            imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
-            mBinding.itemName.setText(car.getCarName());
-            mBinding.carDescription.setText(car.getCarDescription());
-            showErrorDialog(false);
-            isProgressVisible(false);
+            carCell = savedInstanceState.getParcelable(CAR_CELL_PARAM);
+            car = savedInstanceState.getParcelable(CAR_ITEM_PARAM);
+            if (car != null) {
+                itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
+                imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
+                mBinding.itemName.setText(car.getCarName());
+                mBinding.carDescription.setText(car.getCarDescription());
+            }
         }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("CarItemFav", car);
-        outState.putParcelable("CarCellFav", carCell);
+        outState.putParcelable(CAR_ITEM_PARAM, car);
+        outState.putParcelable(CAR_CELL_PARAM, carCell);
     }
 
     public void carInfoReceived(Car car) {
         this.car = car;
-        mBinding.errorLayout.setVisibility(View.GONE);
+        mBinding.erroriconwrapper.setVisibility(View.GONE);
         itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
         imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
         mBinding.itemName.setText(car.getCarName());
@@ -89,10 +90,10 @@ public class CarItemFavoritesFragment extends Fragment {
     }
 
     private void showErrorDialog(Boolean aBoolean) {
-        mBinding.errorLayout.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+        mBinding.erroriconwrapper.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
     }
 
     private void isProgressVisible(Boolean isVisible) {
-        mBinding.progressframelayoutCar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBinding.progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 }

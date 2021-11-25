@@ -3,7 +3,6 @@ package com.example.mycompany.avitoparseapp.di.modules;
 import android.app.Application;
 
 import com.example.mycompany.avitoparseapp.database.AppDatabase;
-import com.example.mycompany.avitoparseapp.database.CarDAO;
 import com.example.mycompany.avitoparseapp.database.CarCellDAO;
 
 import javax.inject.Singleton;
@@ -13,12 +12,6 @@ import dagger.Provides;
 
 @Module
 public abstract class DatabaseModule {
-
-    @Singleton
-    @Provides
-    static CarDAO getCarDao(AppDatabase appDatabase) {
-        return appDatabase.getCarDao();
-    }
 
     @Singleton
     @Provides

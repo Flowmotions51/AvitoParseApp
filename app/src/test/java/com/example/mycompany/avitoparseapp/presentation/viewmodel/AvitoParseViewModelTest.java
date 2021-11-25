@@ -53,6 +53,13 @@ public class AvitoParseViewModelTest {
     @Mock
     private Observer<Car> carItemDataObserver;
 
+    @Mock
+    private Observer<List<CarCell>> carFavoritesCellsListObserver;
+
+    @Mock
+    private Observer<Boolean> isErrorAtFavoritesCellsLoadingObserver;
+
+
     private AvitoParseViewModel avitoParseViewModel;
 
     @Before
@@ -69,12 +76,15 @@ public class AvitoParseViewModelTest {
         avitoParseViewModel.getIsInProgressItemLoading().observeForever(isInProgressItemLoadingObserver);
         avitoParseViewModel.getIsErrorAtItemLoading().observeForever(isErrorAtItemLoadingObserver);
         avitoParseViewModel.getCarItemData().observeForever(carItemDataObserver);
+        avitoParseViewModel.getCarFavoritesCellsData().observeForever(carFavoritesCellsListObserver);
+        avitoParseViewModel.getIsErrorAtFavoritesCellsLoading().observeForever(isErrorAtFavoritesCellsLoadingObserver);
     }
 
     @Test
     public void testLoadCarCellsData() {
         List<CarCell> carCells = createCarCellsTestData();
         when(apiRepository.getCarCells(anyString(), anyString())).thenReturn(Single.just(carCells));
+        //when(avitoParseViewModel.checkIfCarCellExistInFavorites(carCells)).thenReturn(Single.just(1));
         avitoParseViewModel.loadCarCellsData("bmw", "1-seriya");
         verify(isInProgressCellsLoadingObserver).onChanged(true);
         verify(carCellsListObserver).onChanged(carCells);
@@ -85,10 +95,10 @@ public class AvitoParseViewModelTest {
     public void testNegativeLoadCarCellsData() {
         List<CarCell> carCells = createCarCellsTestData();
         when(apiRepository.getCarCells(anyString(), anyString())).thenReturn(Single.just(carCells));
-        avitoParseViewModel.loadCarCellsData("bmw", "1-seriya");
-        verify(isInProgressCellsLoadingObserver).onChanged(true);
+        avitoParseViewModel.loadCarCellsData("noname", "1-seriya");
+        verify(isInProgressCellsLoadingObserver).onChanged(false);
         verify(carCellsListObserver).onChanged(carCells);
-        verify(isErrorAtCellsLoadingObserver).onChanged(false);
+        verify(isErrorAtCellsLoadingObserver).onChanged(true);
     }
 
     @Test
@@ -98,6 +108,22 @@ public class AvitoParseViewModelTest {
         verify(isInProgressItemLoadingObserver).onChanged(true);
         verify(carItemDataObserver).onChanged(createCarItemResponseData());
         verify(isErrorAtItemLoadingObserver).onChanged(false);
+    }
+
+    @Test
+    public void testLoadCarCellsFavorites() {
+        List<CarCell> carCells = createCarCellsTestData();
+        when(dataBaseRepository.getAllFavoritesCarCells()).thenReturn(Single.just(carCells));
+        avitoParseViewModel.loadCarCellsFavorites();
+        verify(carFavoritesCellsListObserver).onChanged(carCells);
+        verify(isInProgressCellsLoadingObserver).onChanged(false);
+    }
+
+    @Test
+    public void testErrorLoadCarCellsFavorites() {
+        when(dataBaseRepository.getAllFavoritesCarCells()).thenReturn(Single.error(new Throwable("Error")));
+        avitoParseViewModel.loadCarCellsFavorites();
+        verify(isErrorAtFavoritesCellsLoadingObserver).onChanged(true);
     }
 
     private Car createCarItemResponseData() {

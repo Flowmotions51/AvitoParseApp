@@ -26,8 +26,4 @@ public interface CarCellDAO {
 
     @Query("SELECT COUNT(*) FROM CARCELL WHERE linkToItem = :link")
     Single<Integer> selectCountByLinkItem(String link);
-
-//    @Query("SELECT carId FROM CARCELL WHERE linkToItem = :link")
-//    int selectCarIdByLinkItem(String link);
-
 }

@@ -10,15 +10,10 @@ import androidx.room.PrimaryKey;
 import java.util.List;
 import java.util.Objects;
 
-@Entity(tableName = "CARITEM")
 public class Car implements Parcelable {
     private final String carName;
     private final String linkToItem;
     private final List<String> photoLinks;
-
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    public int id;
 
     private final String phone;
     private final String carDescription;
@@ -62,7 +57,6 @@ public class Car implements Parcelable {
         dest.writeString(carName);
         dest.writeString(linkToItem);
         dest.writeStringList(photoLinks);
-        dest.writeInt(id);
         dest.writeString(phone);
         dest.writeString(carDescription);
     }
@@ -71,7 +65,6 @@ public class Car implements Parcelable {
         carName = in.readString();
         linkToItem = in.readString();
         photoLinks = in.createStringArrayList();
-        id = in.readInt();
         phone = in.readString();
         carDescription = in.readString();
     }
@@ -93,11 +86,11 @@ public class Car implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
-        return id == car.id && Objects.equals(carName, car.carName) && Objects.equals(linkToItem, car.linkToItem) && Objects.equals(photoLinks, car.photoLinks) && Objects.equals(phone, car.phone) && Objects.equals(carDescription, car.carDescription);
+        return Objects.equals(carName, car.carName) && Objects.equals(linkToItem, car.linkToItem) && Objects.equals(photoLinks, car.photoLinks) && Objects.equals(phone, car.phone) && Objects.equals(carDescription, car.carDescription);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(carName, linkToItem, photoLinks, id, phone, carDescription);
+        return Objects.hash(carName, linkToItem, photoLinks, phone, carDescription);
     }
 }
