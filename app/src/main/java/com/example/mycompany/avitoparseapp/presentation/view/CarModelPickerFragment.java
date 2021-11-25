@@ -69,10 +69,12 @@ public class CarModelPickerFragment extends Fragment {
 
     private void isProgressVisible(Boolean isVisible) {
         mBinding.progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBinding.recyclerView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     private void showErrorDialog(Boolean aBoolean) {
         mBinding.erroricon.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+        mBinding.recyclerView.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
     }
 
     public static CarModelPickerFragment newInstance(String brandModelsLink) {

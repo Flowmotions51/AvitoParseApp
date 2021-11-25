@@ -73,5 +73,6 @@ public class CarBrandPickerFragment extends Fragment {
 
     private void showErrorDialog(Boolean aBoolean) {
         mBinding.erroricon.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+        mBinding.recyclerView.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
     }
 }
