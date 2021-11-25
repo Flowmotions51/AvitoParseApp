@@ -17,10 +17,11 @@ import com.example.mycompany.avitoparseapp.databinding.CarCellLayoutBinding;
 import com.example.mycompany.avitoparseapp.utils.IOnCarCellAction;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarImageViewHolder> {
-    private List<CarCell> carCells;
+    private List<CarCell> carCells = new ArrayList<>();
     private IOnCarCellAction helper;
 
     public void setHelper(IOnCarCellAction helper) {
