@@ -177,10 +177,11 @@ public class AvitoParseViewModel extends ViewModel {
 
     /**
      * Метод для получения списка объявлений автомобилей на основе переданных параметров
+     *
      */
-    public void loadCarCellsData(String brand, String model) {
+    public void loadCarCellsData(String brand, String model, boolean isShowProgressBar) {
         isErrorAtCellsLoading.setValue(false);
-        isInProgressCellsLoading.setValue(true);
+        isInProgressCellsLoading.setValue(isShowProgressBar);
         compositeDisposable.add(apiRepository.getCarCells(brand, model)
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())

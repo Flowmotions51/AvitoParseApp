@@ -42,12 +42,19 @@ public class CarModelPickerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         avitoParseViewModel = new ViewModelProvider(this.getActivity()).get(AvitoParseViewModel.class);
-        brand = getArguments().getString("Brand");
+        brand = getArguments().getString(BRAND_PARAM);
         avitoParseViewModel.getIsInProgressModelsListLoading().observe(this.getActivity(), this::isProgressVisible);
         avitoParseViewModel.getIsErrorAtModelsListLoading().observe(this.getActivity(), this::showErrorDialog);
         avitoParseViewModel.getModelsListData().observe(this.getActivity(), this::showModels);
         adapter = new CarModelAdapter();
-        avitoParseViewModel.loadModelsData(brand);
+        if(savedInstanceState == null) {
+            avitoParseViewModel.loadModelsData(brand);
+        }
+        mBinding.erroricon.setOnClickListener(v -> {
+            showErrorDialog(false);
+            isProgressVisible(true);
+            avitoParseViewModel.loadModelsData(brand);
+        });
     }
 
     private void showModels(List<Model> carBrands) { adapter = new CarModelAdapter();
@@ -61,11 +68,11 @@ public class CarModelPickerFragment extends Fragment {
     }
 
     private void isProgressVisible(Boolean isVisible) {
-        mBinding.progressframelayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBinding.progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void showErrorDialog(Boolean aBoolean) {
-        mBinding.errorLayout.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+        mBinding.erroricon.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
     }
 
     public static CarModelPickerFragment newInstance(String brandModelsLink) {

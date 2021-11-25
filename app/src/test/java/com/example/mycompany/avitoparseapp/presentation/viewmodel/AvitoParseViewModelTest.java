@@ -85,7 +85,7 @@ public class AvitoParseViewModelTest {
         List<CarCell> carCells = createCarCellsTestData();
         when(apiRepository.getCarCells(anyString(), anyString())).thenReturn(Single.just(carCells));
         //when(avitoParseViewModel.checkIfCarCellExistInFavorites(carCells)).thenReturn(Single.just(1));
-        avitoParseViewModel.loadCarCellsData("bmw", "1-seriya");
+        avitoParseViewModel.loadCarCellsData("bmw", "1-seriya", true);
         verify(isInProgressCellsLoadingObserver).onChanged(true);
         verify(carCellsListObserver).onChanged(carCells);
         verify(isErrorAtCellsLoadingObserver).onChanged(false);
@@ -95,7 +95,7 @@ public class AvitoParseViewModelTest {
     public void testNegativeLoadCarCellsData() {
         List<CarCell> carCells = createCarCellsTestData();
         when(apiRepository.getCarCells(anyString(), anyString())).thenReturn(Single.just(carCells));
-        avitoParseViewModel.loadCarCellsData("noname", "1-seriya");
+        avitoParseViewModel.loadCarCellsData("noname", "1-seriya", true);
         verify(isInProgressCellsLoadingObserver).onChanged(false);
         verify(carCellsListObserver).onChanged(carCells);
         verify(isErrorAtCellsLoadingObserver).onChanged(true);

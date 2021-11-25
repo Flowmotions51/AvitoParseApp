@@ -1,6 +1,5 @@
 package com.example.mycompany.avitoparseapp.presentation.view;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,17 +11,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mycompany.avitoparseapp.BaseApplication;
 import com.example.mycompany.avitoparseapp.R;
-import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.databinding.ActivityMainBinding;
 import com.example.mycompany.avitoparseapp.presentation.view.adapter.ViewPagerAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 

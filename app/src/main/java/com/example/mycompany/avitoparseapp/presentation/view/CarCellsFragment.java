@@ -78,9 +78,9 @@ public class CarCellsFragment extends Fragment {
         avitoParseViewModel.getMarkerCarCellsFavorites().observe(getActivity(), this::setFavoriteMutubleLiveData);
 
         swipeRefreshLayout.setOnRefreshListener(() ->
-                avitoParseViewModel.loadCarCellsData(carBrand, carModel));
+                avitoParseViewModel.loadCarCellsData(carBrand, carModel, false));
         if (savedInstanceState == null) {
-            avitoParseViewModel.loadCarCellsData(carBrand, carModel);
+            avitoParseViewModel.loadCarCellsData(carBrand, carModel, true);
         }
     }
 
