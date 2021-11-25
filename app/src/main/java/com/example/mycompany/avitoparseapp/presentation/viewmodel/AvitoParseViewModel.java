@@ -262,7 +262,14 @@ public class AvitoParseViewModel extends ViewModel {
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressCellsLoading.setValue(false))
-                .subscribe(carFavoritesCellsData::setValue,
+                .subscribe(var -> {
+                            carFavoritesCellsData.setValue(var);
+                            if (var.isEmpty()) {
+                                toggleCarFavoritesNoItems.setValue(true);
+                            } else {
+                                toggleCarFavoritesNoItems.setValue(false);
+                            }
+                        },
                         e -> isErrorAtFavoritesCellsLoading.setValue(true)));
     }
 
@@ -317,6 +324,17 @@ public class AvitoParseViewModel extends ViewModel {
 
     public void newToggleCarItemFavoritesButton() {
         toggleCarItemFavoritesButton = new MutableLiveData<>();
+    }
+
+    //for toggle NoCarFavoritesItems
+    private MutableLiveData<Boolean> toggleCarFavoritesNoItems = new MutableLiveData<>();
+
+    public LiveData<Boolean> getToggleCarFavoritesNoItems() {
+        return toggleCarFavoritesNoItems;
+    }
+
+    public void newToggleCarFavoritesNoItems() {
+        toggleCarFavoritesNoItems = new MutableLiveData<>();
     }
 
     @Override
