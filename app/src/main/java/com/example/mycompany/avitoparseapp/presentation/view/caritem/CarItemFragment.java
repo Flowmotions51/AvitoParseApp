@@ -54,7 +54,7 @@ public class CarItemFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
         imageItemViewPager = mBinding.viewPager;
-        mBinding.viewPager.setOffscreenPageLimit(3);
+        mBinding.viewPager.setOffscreenPageLimit(20);
         addItemToFavoriteBtn = mBinding.addItemToFavoritesBtn;
         avitoParseViewModel.newToggleCarItemFavoritesButton();
         avitoParseViewModel.getToggleCarItemFavoritesButton().observe(getViewLifecycleOwner(), this::toggleItemFavoriteButton);

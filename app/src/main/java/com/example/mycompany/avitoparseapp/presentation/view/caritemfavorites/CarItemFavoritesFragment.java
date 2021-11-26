@@ -53,7 +53,7 @@ public class CarItemFavoritesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
         imageItemViewPager = mBinding.viewPager;
-        mBinding.viewPager.setOffscreenPageLimit(3);
+        mBinding.viewPager.setOffscreenPageLimit(20);
         avitoParseViewModel.getIsErrorAtFavoriteItemLoading().observe(getViewLifecycleOwner(), this::showErrorDialog);
         avitoParseViewModel.getCarItemDataFavorites().observe(getViewLifecycleOwner(), this::carInfoReceived);
         avitoParseViewModel.getIsInProgressFavoriteItemLoading().observe(getViewLifecycleOwner(), this::isProgressVisible);
