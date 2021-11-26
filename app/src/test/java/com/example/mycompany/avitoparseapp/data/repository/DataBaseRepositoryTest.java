@@ -84,21 +84,6 @@ public class DataBaseRepositoryTest {
         testObserver.dispose();
     }
 
-    @Test
-    public void testInsertOrDeleteIfExist() {
-        //Arrange
-        int result = 1;
-        CarCell carCell = createCarCellsTestData().get(0);
-        Mockito.doReturn(Completable.complete()).when(carCellDAO).insertRecord(carCell);
-        Mockito.doReturn(Single.just(result)).when(carCellDAO).selectCountByLinkItem(carCell.getLinkToItem());
-        //Act
-        TestObserver testObserver = dataBaseRepository.insertOrDeleteIfExist(carCell).test();
-        //Assert
-        testObserver.assertComplete();
-        testObserver.dispose();
-    }
-
-
     private List<CarCell> createCarCellsTestData() {
         return new ArrayList<>(
                 Arrays.asList(

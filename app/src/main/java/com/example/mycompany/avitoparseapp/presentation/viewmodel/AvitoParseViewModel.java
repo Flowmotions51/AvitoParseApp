@@ -165,6 +165,7 @@ public class AvitoParseViewModel extends ViewModel {
     }
 
     public void loadModelsData(String brand) {
+        brand = brand.substring(brand.lastIndexOf("/") + 1);
         isErrorAtModelsListLoading.setValue(false);
         isInProgressModelsListLoading.setValue(true);
         compositeDisposable.add(apiRepository.getModelList(brand)
@@ -179,6 +180,9 @@ public class AvitoParseViewModel extends ViewModel {
      * Метод для получения списка объявлений автомобилей на основе переданных параметров
      */
     public void loadCarCellsData(String brand, String model, boolean isShowProgressBar) {
+        brand = brand.substring(brand.lastIndexOf("/") + 1);
+        brand = brand.substring(0, brand.lastIndexOf("-"));
+        model = model.substring(model.lastIndexOf("/") + 1).substring(0, model.substring(model.lastIndexOf("/") + 1).lastIndexOf("-"));
         isErrorAtCellsLoading.setValue(false);
         isInProgressCellsLoading.setValue(isShowProgressBar);
         compositeDisposable.add(apiRepository.getCarCells(brand, model)
