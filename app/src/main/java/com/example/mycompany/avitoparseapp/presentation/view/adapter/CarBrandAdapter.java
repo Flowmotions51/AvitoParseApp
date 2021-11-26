@@ -12,10 +12,12 @@ import com.example.mycompany.avitoparseapp.data.model.Brand;
 import com.example.mycompany.avitoparseapp.databinding.ModelPickerItemLayoutBinding;
 import com.example.mycompany.avitoparseapp.utils.IOnItemTextAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CarBrandAdapter extends RecyclerView.Adapter<CarBrandAdapter.CarModelViewHolder> {
-    private List<Brand> models;
+    private List<Brand> models = new ArrayList<>();
+    private List<Brand> cache = new ArrayList<>();
     private IOnItemTextAction action;
 
     public void setAction(IOnItemTextAction action) {
@@ -42,6 +44,21 @@ public class CarBrandAdapter extends RecyclerView.Adapter<CarBrandAdapter.CarMod
         holder.setModel(models.get(holder.getBindingAdapterPosition()).getName());
         holder.setOnCLickListener(v ->
                 action.onAction(models.get(holder.getBindingAdapterPosition()).getLink()));
+    }
+
+    public void filterList(List<Brand> filteredBrandList) {
+        cache = models;
+        models = filteredBrandList;
+        notifyDataSetChanged();
+    }
+
+    public void loadFromCache() {
+        models = cache;
+        notifyDataSetChanged();
+    }
+
+    public boolean isCached() {
+        return !cache.isEmpty();
     }
 
     @Override

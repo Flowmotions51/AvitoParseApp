@@ -13,6 +13,7 @@ import com.example.mycompany.avitoparseapp.data.model.Model;
 import com.example.mycompany.avitoparseapp.databinding.ModelPickerItemLayoutBinding;
 import com.example.mycompany.avitoparseapp.utils.IOnItemTextAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CarModelAdapter extends RecyclerView.Adapter<CarModelAdapter.CarModelViewHolder> {
@@ -20,12 +21,18 @@ public class CarModelAdapter extends RecyclerView.Adapter<CarModelAdapter.CarMod
     public void setModels(List<Model> models) {
         this.models = models;
     }
+    private List<Model> cache = new ArrayList<>();
 
-    private List<Model> models;
+    private List<Model> models = new ArrayList<>();
     private IOnItemTextAction action;
 
     public void setAction(IOnItemTextAction action) {
         this.action = action;
+    }
+
+
+    public List<Model> getModels() {
+        return models;
     }
 
     @NonNull
@@ -46,6 +53,22 @@ public class CarModelAdapter extends RecyclerView.Adapter<CarModelAdapter.CarMod
     public int getItemCount() {
         return models.size();
     }
+
+    public void filterList(List<Model> filteredBrandList) {
+        cache = models;
+        models = filteredBrandList;
+        notifyDataSetChanged();
+    }
+
+    public void loadFromCache() {
+        models = cache;
+        notifyDataSetChanged();
+    }
+
+    public boolean isCached() {
+        return !cache.isEmpty();
+    }
+
 
     static class CarModelViewHolder extends RecyclerView.ViewHolder {
 
