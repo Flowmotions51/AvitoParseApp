@@ -11,8 +11,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:textSize="30dp"
+        android:padding="@dimen/PickerRecyclerItemPadding"
+        android:textSize="@dimen/PickerRecyclerItemTextSize"
         android:text="Model name"
         />
 

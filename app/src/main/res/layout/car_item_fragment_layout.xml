@@ -93,11 +93,10 @@
     <TextView
         android:id="@+id/phone"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/PhoneIconHeight"
         android:background="@android:color/holo_green_light"
         android:gravity="center"
-        android:text="+799999999"
-        android:textSize="30sp"
+        android:textSize="@dimen/NoFavoriteItemsTextSize"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/scrollView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -118,9 +117,9 @@
             android:id="@+id/carDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
+            android:padding="@dimen/CarDescriptionPadding"
             android:text="description"
-            android:textSize="20dp" />
+            android:textSize="@dimen/CarDescriptionTextSize" />
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

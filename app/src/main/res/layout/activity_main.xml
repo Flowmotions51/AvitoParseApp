@@ -10,8 +10,7 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="TextView" />
+        android:layout_height="@dimen/TabLayoutHeight" />
 
     <androidx.viewpager2.widget.ViewPager2
 

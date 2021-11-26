@@ -30,7 +30,7 @@
     <string name="cd_home">Home</string>
     <string name="cd_list">List</string>
     <string name="cd_form">Form</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_favorite_items">No favorite items</string>
+    <string name="car_photo_description">Car Photo</string>
 </resources>

@@ -96,6 +96,9 @@ public class CarItemFavoritesFragment extends Fragment {
             String telephone = mBinding.phone.getText().toString();
             intent.setData(Uri.parse("tel:" + telephone));
             if (ActivityCompat.checkSelfPermission(CarItemFavoritesFragment.this.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.CALL_PHONE},
+                        1);
                 return;
             }
             startActivity(intent);

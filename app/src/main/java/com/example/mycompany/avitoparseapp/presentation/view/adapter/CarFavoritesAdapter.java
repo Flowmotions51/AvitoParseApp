@@ -43,6 +43,7 @@ public class CarFavoritesAdapter extends RecyclerView.Adapter<CarFavoritesAdapte
 
     @Override
     public void onBindViewHolder(@NonNull CarImageViewHolder holder, int position) {
+        holder.setPrice(carCells.get(holder.getBindingAdapterPosition()).getPrice());
         holder.setImageByUrl(carCells.get(holder.getBindingAdapterPosition()).getPreviewImageUrl());
         holder.setDescription(carCells.get(holder.getBindingAdapterPosition()).getCarName());
         holder.setOnCLickListener(v -> helper.action(carCells.get(holder.getBindingAdapterPosition())));
@@ -62,14 +63,20 @@ public class CarFavoritesAdapter extends RecyclerView.Adapter<CarFavoritesAdapte
 
         private ImageView imageView;
         private TextView textView;
+        private TextView textPrice;
 
         private CarCellLayoutBinding mBinding;
+
+        public void setPrice(String price) {
+            textPrice.setText(price + " ₽");
+        }
 
         public CarImageViewHolder(@NonNull View itemView) {
             super(itemView);
             mBinding = CarCellLayoutBinding.bind(itemView);
             imageView = mBinding.carImagePlaceholder;
             textView = mBinding.carDescription;
+            textPrice = mBinding.price;
         }
 
         public void setOnCLickListener(View.OnClickListener listener) {
@@ -78,7 +85,6 @@ public class CarFavoritesAdapter extends RecyclerView.Adapter<CarFavoritesAdapte
 
         public void setImageByUrl(String url) {
             Picasso.get().load(url)
-                    //.placeholder(R.drawable.progress_animation)
                     .into(imageView);
         }
 

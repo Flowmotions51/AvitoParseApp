@@ -7,10 +7,10 @@
     <ImageView
         android:id="@+id/carPhoto"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="@dimen/CarPhotoHeight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        android:contentDescription="@string/car_photo_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

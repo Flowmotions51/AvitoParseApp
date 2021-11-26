@@ -23,10 +23,14 @@ public class ApiRepository {
     }
 
     public Single<List<CarCell>> getCarCells(String brand, String model) {
+        brand = brand.substring(brand.lastIndexOf("/") + 1);
+        brand = brand.substring(0, brand.lastIndexOf("-"));
+        model = model.substring(model.lastIndexOf("/") + 1).substring(0, model.substring(model.lastIndexOf("/") + 1).lastIndexOf("-"));
         return apiService.getResponseItemList(brand, model);
     }
 
     public Single<Car> getCar(String link) {
+
         return apiService.getItem(link);
     }
 
@@ -35,6 +39,7 @@ public class ApiRepository {
     }
 
     public Single<List<Model>> getModelList(String brand) {
+        brand = brand.substring(brand.lastIndexOf("/") + 1);
         return apiService.getModelsList(brand);
     }
 }

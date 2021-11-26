@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="BringToFront">90px</dimen>
+
+    <dimen name="TabLayoutHeight">50dp</dimen>
+    <dimen name="PickerRecyclerItemPadding">20dp</dimen>
+    <dimen name="PickerRecyclerItemTextSize">30sp</dimen>
+    <dimen name="CarCellFavoriteLogoHeight">50dp</dimen>
+    <dimen name="CarCellFavoriteLogoWidth">53dp</dimen>
+    <dimen name="ShapeableImageViewHeight">150dp</dimen>
+    <dimen name="ShapeableImageViewMargin">10dp</dimen>
+    <dimen name="CarDescriptionTextSize">20sp</dimen>
+    <dimen name="PricePaddingLeft">20dp</dimen>
+    <dimen name="PriceTextSize">25sp</dimen>
+
+    <dimen name="ErrorIconWidth">41.46dp</dimen>
+    <dimen name="ErrorIconHeight">41.46dp</dimen>
+    <dimen name="NoFavoriteItemsTextSize">30sp</dimen>
+    <dimen name="PhoneIconHeight">50dp</dimen>
+    <dimen name="CarDescriptionPadding">20dp</dimen>
+    <dimen name="CarPhotoHeight">300dp</dimen>
+</resources>

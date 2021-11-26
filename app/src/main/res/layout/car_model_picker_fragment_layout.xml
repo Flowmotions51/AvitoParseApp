@@ -8,19 +8,20 @@
 
     <FrameLayout
         android:id="@+id/erroricon"
+        android:background="@color/white"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clickable="true"
         android:focusable="true"
-        android:translationZ="90px"
+        android:translationZ="@dimen/BringToFront"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <View
-            android:layout_width="41.46dp"
-            android:layout_height="42.14dp"
+            android:layout_width="@dimen/ErrorIconWidth"
+            android:layout_height="@dimen/ErrorIconHeight"
             android:layout_gravity="center"
             android:background="@drawable/erroriaconvector"
             android:backgroundTint="@android:color/holo_red_dark" />
@@ -32,7 +33,7 @@
         android:layout_height="0dp"
         android:clickable="true"
         android:focusable="true"
-        android:translationZ="90px"
+        android:translationZ="@dimen/BringToFront"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:rotation="@integer/material_motion_duration_long_1"
-            android:translationZ="90px"
+            android:translationZ="@dimen/BringToFront"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

@@ -85,7 +85,7 @@ public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarIma
         }
 
         public void setPrice(String price) {
-            textPrice.setText(price);
+            textPrice.setText(price + " ₽");
         }
 
         public void setOnCLickListener(View.OnClickListener listener) {
@@ -94,9 +94,6 @@ public class CarCellsAdapter extends RecyclerView.Adapter<CarCellsAdapter.CarIma
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void setImageByUrl(String url) {
-//            byte[] decodedString = Base64.getDecoder().decode(url);
-//            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-//            imageView.setImageBitmap(decodedByte);
             Picasso.get()
                     .load(url)
                     .into(imageView);
