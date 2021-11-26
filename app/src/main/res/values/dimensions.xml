@@ -14,6 +14,8 @@
     <dimen name="PricePaddingLeft">20dp</dimen>
     <dimen name="PriceTextSize">25sp</dimen>
 
+    <dimen name="CarCellMinTextSize">5sp</dimen>
+    <dimen name="CarCellMaxTextSize">20sp</dimen>
     <dimen name="ErrorIconWidth">41.46dp</dimen>
     <dimen name="ErrorIconHeight">41.46dp</dimen>
     <dimen name="NoFavoriteItemsTextSize">30sp</dimen>
