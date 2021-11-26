@@ -77,6 +77,12 @@ public class CarModelPickerFragment extends Fragment {
         mBinding.recyclerView.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        avitoParseViewModel.getModelsListData().removeObservers(this.getActivity());
+    }
+
     public static CarModelPickerFragment newInstance(String brandModelsLink) {
         CarModelPickerFragment fragment = new CarModelPickerFragment();
         Bundle args = new Bundle();

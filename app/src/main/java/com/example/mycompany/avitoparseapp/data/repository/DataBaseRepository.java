@@ -27,10 +27,13 @@ public class DataBaseRepository {
     }
 
     public Completable insertOrDeleteIfExist(CarCell cell) {
-        if(carCellDAO.selectCountByLinkItem(cell.getLinkToItem()).blockingGet() == 0) {
-            return carCellDAO.insertRecord(cell);
-        } else {
-            return carCellDAO.deleteByLink(cell.getLinkToItem());
-        }
+        return carCellDAO.selectCountByLinkItem(cell.getLinkToItem())
+                .flatMapCompletable(integer -> {
+                    if (integer == 0) {
+                        return carCellDAO.insertRecord(cell);
+                    } else {
+                        return carCellDAO.deleteByLink(cell.getLinkToItem());
+                    }
+                });
     }
 }

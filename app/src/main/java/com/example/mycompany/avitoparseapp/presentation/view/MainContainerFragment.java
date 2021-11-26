@@ -29,14 +29,10 @@ public class MainContainerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState == null) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("BackStackNumber", 1);
-            bundle.putString("BackStackTag", "BackStackNumber1");
             CarBrandPickerFragment carBrandPickerFragment = new CarBrandPickerFragment();
-            carBrandPickerFragment.setArguments(bundle);
             getChildFragmentManager().beginTransaction()
-                    .addToBackStack("CarBrandPickerFragment1")
-                    .add(mBinding.mainContainer.getId(), carBrandPickerFragment, "BackStackNumber1")
+                    .addToBackStack(null)
+                    .add(mBinding.mainContainer.getId(), carBrandPickerFragment)
                     .commit();
         }
     }

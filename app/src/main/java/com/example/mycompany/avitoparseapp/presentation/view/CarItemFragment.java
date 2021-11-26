@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.mycompany.avitoparseapp.data.model.Car;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
@@ -27,9 +28,11 @@ public class CarItemFragment extends Fragment {
     private static final String CAR_CELL_PARAM = "CarCell";
     private static final String IS_FAVORITES_ACTIVATED_PARAM = "IsFavoritesActivated";
     private static final String CAR_ITEM_PARAM = "CarItem";
+    private static final String IMAGE_POSITION = "Position";
     private CarItemFragmentLayoutBinding mBinding;
     private AvitoParseViewModel avitoParseViewModel;
     private VerticalViewPager imageItemViewPager;
+    private int viewPagerCurrentPosition;
     private ItemImagesViewPagerAdapter itemImagesViewPagerAdapter;
     private Button addItemToFavoriteBtn;
     private CarCell carCell;
@@ -53,6 +56,7 @@ public class CarItemFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
         imageItemViewPager = mBinding.viewPager;
+        mBinding.viewPager.setOffscreenPageLimit(3);
         addItemToFavoriteBtn = mBinding.addItemToFavoritesBtn;
         avitoParseViewModel.newToggleCarItemFavoritesButton();
         avitoParseViewModel.getToggleCarItemFavoritesButton().observe(getViewLifecycleOwner(), this::toggleItemFavoriteButton);
@@ -74,13 +78,35 @@ public class CarItemFragment extends Fragment {
             mBinding.addItemToFavoritesBtn.setActivated(savedInstanceState.getBoolean(IS_FAVORITES_ACTIVATED_PARAM));
             if (car != null) {
                 itemImagesViewPagerAdapter = new ItemImagesViewPagerAdapter(getActivity(), car.getPhotoLinks());
+                mBinding.viewPager.setOffscreenPageLimit(3);
+                viewPagerCurrentPosition = savedInstanceState.getInt(IMAGE_POSITION);
+                mBinding.viewPager.post(() -> mBinding.viewPager.setCurrentItem(viewPagerCurrentPosition, false));
                 imageItemViewPager.setAdapter(itemImagesViewPagerAdapter);
                 mBinding.itemName.setText(car.getCarName());
                 mBinding.carDescription.setText(car.getCarDescription());
+                itemImagesViewPagerAdapter.notifyDataSetChanged();
             }
         }
         mBinding.addItemToFavoritesBtn.setOnClickListener(v -> {
             avitoParseViewModel.insertOrDeleteIfExist(carCell);
+        });
+
+        mBinding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                viewPagerCurrentPosition = position;
+                itemImagesViewPagerAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
         });
 
         mBinding.erroricon.setOnClickListener(v -> avitoParseViewModel.loadCarItemData(carCell));
@@ -101,6 +127,7 @@ public class CarItemFragment extends Fragment {
         if (addItemToFavoriteBtn != null) {
             outState.putBoolean(IS_FAVORITES_ACTIVATED_PARAM, addItemToFavoriteBtn.isActivated());
         }
+        outState.putInt(IMAGE_POSITION, viewPagerCurrentPosition);
         outState.putParcelable(CAR_CELL_PARAM, carCell);
         super.onSaveInstanceState(outState);
     }

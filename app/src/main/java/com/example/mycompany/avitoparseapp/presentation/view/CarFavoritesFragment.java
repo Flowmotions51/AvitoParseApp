@@ -52,6 +52,7 @@ public class CarFavoritesFragment extends Fragment {
         });
         mBinding.noFavoriteItems.setVisibility(View.VISIBLE);
         avitoParseViewModel = new ViewModelProvider(getActivity()).get(AvitoParseViewModel.class);
+        avitoParseViewModel.getIsInProgressFavoritesCellsLoading().observe(this.getActivity(), this::isProgressVisible);
         avitoParseViewModel.getCarFavoritesCellsData().observe(this.getActivity(), this::showCars);
         avitoParseViewModel.getToggleCarFavoritesNoItems().observe(this.getActivity(), this::showNoItems);
         if(savedInstanceState == null) {
@@ -78,6 +79,11 @@ public class CarFavoritesFragment extends Fragment {
     private void showCars(List<CarCell> carCells) {
         recyclerViewCarCellsAdapter.setImageUris(carCells);
         mBinding.recyclerView.setAdapter(recyclerViewCarCellsAdapter);
+    }
+
+    private void isProgressVisible(Boolean isVisible) {
+        mBinding.recyclerView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        mBinding.progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void showNoItems(Boolean b) {

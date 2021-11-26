@@ -76,7 +76,11 @@ public class CarCellsFragment extends Fragment {
         avitoParseViewModel.getIsErrorAtCellsLoading().observe(getActivity(), this::showErrorDialog);
 
         avitoParseViewModel.getMarkerCarCellsFavorites().observe(getActivity(), this::setFavoriteMutubleLiveData);
-
+        mBinding.erroricon.setOnClickListener(v -> {
+            showErrorDialog(false);
+            isProgressVisible(true);
+            avitoParseViewModel.loadCarCellsData(carBrand, carModel, true);
+        });
         swipeRefreshLayout.setOnRefreshListener(() ->
                 avitoParseViewModel.loadCarCellsData(carBrand, carModel, false));
         if (savedInstanceState == null) {
@@ -85,11 +89,13 @@ public class CarCellsFragment extends Fragment {
     }
 
     private void showErrorDialog(Boolean aBoolean) {
+        mBinding.recyclerView.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
         mBinding.swiperLayout.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
         mBinding.erroricon.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
     }
 
     private void isProgressVisible(Boolean isVisible) {
+        mBinding.recyclerView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
         mBinding.swiperLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
         mBinding.progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }

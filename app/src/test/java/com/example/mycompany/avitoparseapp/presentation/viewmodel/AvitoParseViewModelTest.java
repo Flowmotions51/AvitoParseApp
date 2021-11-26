@@ -22,6 +22,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Single;
@@ -59,6 +60,12 @@ public class AvitoParseViewModelTest {
     @Mock
     private Observer<Boolean> isErrorAtFavoritesCellsLoadingObserver;
 
+    @Mock
+    private Observer<Boolean> isInProgressFavoritesCellsLoadingObserver;
+
+    @Mock
+    private Observer<Boolean> toggleCarFavoritesNoItemsObserver;
+
 
     private AvitoParseViewModel avitoParseViewModel;
 
@@ -76,8 +83,11 @@ public class AvitoParseViewModelTest {
         avitoParseViewModel.getIsInProgressItemLoading().observeForever(isInProgressItemLoadingObserver);
         avitoParseViewModel.getIsErrorAtItemLoading().observeForever(isErrorAtItemLoadingObserver);
         avitoParseViewModel.getCarItemData().observeForever(carItemDataObserver);
+
         avitoParseViewModel.getCarFavoritesCellsData().observeForever(carFavoritesCellsListObserver);
+        avitoParseViewModel.getIsInProgressFavoritesCellsLoading().observeForever(isInProgressFavoritesCellsLoadingObserver);
         avitoParseViewModel.getIsErrorAtFavoritesCellsLoading().observeForever(isErrorAtFavoritesCellsLoadingObserver);
+        avitoParseViewModel.getToggleCarFavoritesNoItems().observeForever(toggleCarFavoritesNoItemsObserver);
     }
 
     @Test
@@ -116,7 +126,25 @@ public class AvitoParseViewModelTest {
         when(dataBaseRepository.getAllFavoritesCarCells()).thenReturn(Single.just(carCells));
         avitoParseViewModel.loadCarCellsFavorites();
         verify(carFavoritesCellsListObserver).onChanged(carCells);
-        verify(isInProgressCellsLoadingObserver).onChanged(false);
+        verify(isInProgressFavoritesCellsLoadingObserver).onChanged(false);
+        verify(toggleCarFavoritesNoItemsObserver).onChanged(false);
+    }
+
+    @Test
+    public void testLoadCarCellsFavoritesEmptyList() {
+        List<CarCell> carCells = Collections.emptyList();
+        when(dataBaseRepository.getAllFavoritesCarCells()).thenReturn(Single.just(carCells));
+        avitoParseViewModel.loadCarCellsFavorites();
+        verify(carFavoritesCellsListObserver).onChanged(carCells);
+        verify(isInProgressFavoritesCellsLoadingObserver).onChanged(false);
+        verify(toggleCarFavoritesNoItemsObserver).onChanged(true);
+    }
+
+    @Test
+    public void testNegativeLoadCarCellsFavorites() {
+        when(dataBaseRepository.getAllFavoritesCarCells()).thenReturn(Single.error(new RuntimeException("Ex")));
+        avitoParseViewModel.loadCarCellsFavorites();
+        verify(isErrorAtFavoritesCellsLoadingObserver).onChanged(true);
     }
 
     @Test

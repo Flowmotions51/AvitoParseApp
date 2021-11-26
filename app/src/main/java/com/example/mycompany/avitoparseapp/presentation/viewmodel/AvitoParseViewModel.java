@@ -14,7 +14,7 @@ import com.example.mycompany.avitoparseapp.data.repository.ApiRepository;
 import com.example.mycompany.avitoparseapp.data.repository.DataBaseRepository;
 
 import java.util.List;
-
+import android.util.Pair;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
@@ -177,7 +177,6 @@ public class AvitoParseViewModel extends ViewModel {
 
     /**
      * Метод для получения списка объявлений автомобилей на основе переданных параметров
-     *
      */
     public void loadCarCellsData(String brand, String model, boolean isShowProgressBar) {
         isErrorAtCellsLoading.setValue(false);
@@ -186,59 +185,18 @@ public class AvitoParseViewModel extends ViewModel {
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
                 .doAfterTerminate(() -> isInProgressCellsLoading.setValue(false))
-                .toObservable()
-                .flatMap((Function<List<CarCell>, Observable<CarCell>>) carCells -> {
+                .flatMapObservable(carCells -> {
                     carCellsMutableLiveData.setValue(carCells);
                     return Observable.fromIterable(carCells);
-                }).subscribe(cell -> {
-                            checkIfCarCellExistInFavorites(cell);
+                })
+                .flatMapSingle(carCell ->
+                        dataBaseRepository.checkIfCarCellExistInFavorites(carCell)
+                                .map(integer -> new Pair<>(carCell, integer)))
+                .subscribe(pair -> {
+                            pair.first.setFavorite(pair.second == 1);
+                            carCellsMutableLiveData.setValue(carCellsMutableLiveData.getValue());
                         },
                         e -> isErrorAtCellsLoading.setValue(true)));
-//
-//        Observable<CarCell> carCellObservable = apiRepository.getCarCells(brand, model)
-//                .toObservable()
-//                .flatMap((Function<List<CarCell>, Observable<CarCell>>) carCells -> {
-//                    //carCellsMutableLiveData.setValue(carCells);
-//                    return Observable.fromIterable(carCells);
-//                });
-//
-//        Observable<CarCell> carFavObservable = dataBaseRepository.getAllFavoritesCarCells()
-//                .toObservable()
-//                .flatMap((Function<List<CarCell>, Observable<CarCell>>) carCells -> {
-////                    carCellsMutableLiveData.setValue(carCells);
-//                    return Observable.fromIterable(carCells);
-//                });
-//
-//        compositeDisposable.add(carCellObservable.concatMap(new Function<CarCell, Observable<Boolean>>() {
-//            @Override
-//            public Observable<Boolean> apply(@NonNull CarCell cell) throws Exception {
-//                return carFavObservable.contains(cell).toObservable();
-//            }
-//        }).zipWith(carCellObservable, new BiFunction<Boolean, CarCell, Object>() {
-//            @NonNull
-//            @Override
-//            public Object apply(@NonNull Boolean aBoolean, @NonNull CarCell cell) throws Exception {
-//                cell.setFavorite(aBoolean);
-//                return carCellObservable;
-//            }
-//        })
-//                .subscribeOn(schedulersProvider.io())
-//                .observeOn(schedulersProvider.ui())
-//                .doAfterTerminate(() -> isInProgressCellsLoading.setValue(false))
-//                .subscribe(cell -> {
-//                    System.out.println(cell);
-//                }));
-
-    }
-
-    private void checkIfCarCellExistInFavorites(CarCell cell) {
-        compositeDisposable.add(dataBaseRepository.checkIfCarCellExistInFavorites(cell)
-                .subscribeOn(schedulersProvider.io())
-                .observeOn(schedulersProvider.ui())
-                .subscribe(isFavorite -> {
-                    cell.setFavorite(isFavorite == 1);
-                    carCellsMutableLiveData.setValue(carCellsMutableLiveData.getValue());
-                }));
     }
 
     /**
@@ -249,7 +207,6 @@ public class AvitoParseViewModel extends ViewModel {
     public void loadCarItemData(CarCell carCell) {
         String link = carCell.getLinkToItem();
         isInProgressItemLoading.setValue(true);
-        isErrorAtItemLoading.setValue(false);
         compositeDisposable.add(apiRepository.getCar(link)
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
@@ -262,7 +219,7 @@ public class AvitoParseViewModel extends ViewModel {
         compositeDisposable.add(dataBaseRepository.getAllFavoritesCarCells()
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
-                .doAfterTerminate(() -> isInProgressCellsLoading.setValue(false))
+                .doAfterTerminate(() -> isInProgressFavoritesCellsLoading.setValue(false))
                 .subscribe(var -> {
                             carFavoritesCellsData.setValue(var);
                             if (var.isEmpty()) {
@@ -276,8 +233,8 @@ public class AvitoParseViewModel extends ViewModel {
 
     public void loadCarItemFavoriteData(CarCell carCell) {
         String link = carCell.getLinkToItem();
-        isInProgressItemLoading.setValue(true);
-        isErrorAtItemLoading.setValue(false);
+        isInProgressFavoriteItemLoading.setValue(true);
+        isErrorAtFavoriteItemLoading.setValue(false);
         compositeDisposable.add(apiRepository.getCar(link)
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
@@ -332,10 +289,6 @@ public class AvitoParseViewModel extends ViewModel {
 
     public LiveData<Boolean> getToggleCarFavoritesNoItems() {
         return toggleCarFavoritesNoItems;
-    }
-
-    public void newToggleCarFavoritesNoItems() {
-        toggleCarFavoritesNoItems = new MutableLiveData<>();
     }
 
     @Override
