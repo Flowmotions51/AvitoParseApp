@@ -18,14 +18,28 @@ public class DataBaseRepository {
         this.carCellDAO = carCellDAO;
     }
 
+    /**
+     * Получить все объекты CarCell из таблицы
+     * @return
+     */
     public Single<List<CarCell>> getAllFavoritesCarCells() {
         return carCellDAO.getAllRecordsFromDb();
     }
 
+    /**
+     * Проверка наличия объекта CarCell в БД по значению linkToItem
+     * @param cell
+     * @return
+     */
     public Single<Integer> checkIfCarCellExistInFavorites(CarCell cell) {
         return carCellDAO.selectCountByLinkItem(cell.getLinkToItem());
     }
 
+    /**
+     * Если в БД нет объекта CarCell со значением linkToItem, то добавляем его, если есть, удаляем
+     * @param cell
+     * @return
+     */
     public Completable insertOrDeleteIfExist(CarCell cell) {
         return carCellDAO.selectCountByLinkItem(cell.getLinkToItem())
                 .flatMapCompletable(integer -> {

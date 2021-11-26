@@ -1,4 +1,4 @@
-package com.example.mycompany.avitoparseapp.presentation.view.adapter;
+package com.example.mycompany.avitoparseapp.presentation.view.caritem;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;

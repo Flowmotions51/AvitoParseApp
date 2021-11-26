@@ -1,4 +1,4 @@
-package com.example.mycompany.avitoparseapp.presentation.view.adapter;
+package com.example.mycompany.avitoparseapp.presentation.view.carfavoritescells;
 
 import android.view.LayoutInflater;
 import android.view.View;

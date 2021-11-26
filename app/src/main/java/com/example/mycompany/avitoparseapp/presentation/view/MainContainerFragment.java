@@ -10,10 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.mycompany.avitoparseapp.databinding.MainContainerFragmentLayoutBinding;
-import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
+import com.example.mycompany.avitoparseapp.presentation.view.carbrandpicker.CarBrandPickerFragment;
 
-import java.util.List;
-
+/**
+ * Фрагмент контейнер для фрагментов во вкладке "Поиск"
+ */
 public class MainContainerFragment extends Fragment {
     private MainContainerFragmentLayoutBinding mBinding;
 

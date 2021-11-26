@@ -1,4 +1,4 @@
-package com.example.mycompany.avitoparseapp.presentation.view.adapter;
+package com.example.mycompany.avitoparseapp.presentation.view.carcells;
 
 import android.os.Build;
 import android.view.LayoutInflater;

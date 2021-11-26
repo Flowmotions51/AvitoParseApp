@@ -10,6 +10,9 @@ import androidx.room.PrimaryKey;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Объект-представление полного объявления автомобиля
+ */
 public class Car implements Parcelable {
     private final String carName;
     private final String linkToItem;

@@ -1,4 +1,4 @@
-package com.example.mycompany.avitoparseapp.presentation.view;
+package com.example.mycompany.avitoparseapp.presentation.view.carmodelpicker;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,10 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mycompany.avitoparseapp.R;
-import com.example.mycompany.avitoparseapp.data.model.Brand;
 import com.example.mycompany.avitoparseapp.data.model.Model;
 import com.example.mycompany.avitoparseapp.databinding.CarModelPickerFragmentLayoutBinding;
-import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarModelAdapter;
+import com.example.mycompany.avitoparseapp.presentation.view.carcells.CarCellsFragment;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 
 import java.util.ArrayList;

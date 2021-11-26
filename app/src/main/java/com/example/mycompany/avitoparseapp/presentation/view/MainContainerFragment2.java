@@ -10,7 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.mycompany.avitoparseapp.databinding.MainContainerFavoritesFragmentLayoutBinding;
+import com.example.mycompany.avitoparseapp.presentation.view.carfavoritescells.CarFavoritesFragment;
 
+/**
+ * Фрагмент контейнер фрагментов во вкладке "избранное"
+ */
 public class MainContainerFragment2 extends Fragment {
     private MainContainerFavoritesFragmentLayoutBinding mBinding;
 

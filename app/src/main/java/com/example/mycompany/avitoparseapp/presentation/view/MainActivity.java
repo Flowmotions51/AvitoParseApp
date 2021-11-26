@@ -14,7 +14,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.mycompany.avitoparseapp.BaseApplication;
 import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.databinding.ActivityMainBinding;
-import com.example.mycompany.avitoparseapp.presentation.view.adapter.ViewPagerAdapter;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -66,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayoutMediator.attach();
     }
 
+    /**
+     * Закрываем фрагмент из текущей вкладки ViewPager'a
+     */
     @Override
     public void onBackPressed() {
         Fragment currentViewpagerFragment = getSupportFragmentManager()
@@ -84,6 +86,12 @@ public class MainActivity extends AppCompatActivity {
                 .commitNow();
     }
 
+    /**
+     * Включить выключить разрешения
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {

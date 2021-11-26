@@ -1,13 +1,10 @@
-package com.example.mycompany.avitoparseapp.presentation.view.adapter;
+package com.example.mycompany.avitoparseapp.presentation.view;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
-
-import com.example.mycompany.avitoparseapp.presentation.view.MainContainerFragment;
-import com.example.mycompany.avitoparseapp.presentation.view.MainContainerFragment2;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
@@ -21,10 +18,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
         switch (position) {
             case 0:
                 return MainContainerFragment.newInstance();
-            case 1:
-                return MainContainerFragment2.newInstance();
             default:
-                return null;
+                return MainContainerFragment2.newInstance();
         }
     }
 

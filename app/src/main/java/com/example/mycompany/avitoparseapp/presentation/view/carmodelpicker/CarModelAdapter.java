@@ -1,4 +1,4 @@
-package com.example.mycompany.avitoparseapp.presentation.view.adapter;
+package com.example.mycompany.avitoparseapp.presentation.view.carmodelpicker;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycompany.avitoparseapp.R;
-import com.example.mycompany.avitoparseapp.data.model.Brand;
 import com.example.mycompany.avitoparseapp.data.model.Model;
 import com.example.mycompany.avitoparseapp.databinding.ModelPickerItemLayoutBinding;
 import com.example.mycompany.avitoparseapp.utils.IOnItemTextAction;

@@ -48,7 +48,7 @@
     </FrameLayout>
 
 
-    <com.example.mycompany.avitoparseapp.presentation.view.adapter.VerticalViewPager
+    <com.example.mycompany.avitoparseapp.presentation.view.caritem.VerticalViewPager
         android:id="@+id/view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"

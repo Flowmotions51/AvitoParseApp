@@ -11,6 +11,9 @@ import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
+/**
+ * Объект-представление элемента из списка объявлений
+ */
 @Entity(tableName = "CARCELL")
 public class CarCell implements Parcelable {
     private final String previewImageUrl;

@@ -1,5 +1,9 @@
 package com.example.mycompany.avitoparseapp.data.model;
 
+
+/**
+ * Объект-представление модели
+ */
 public class Model {
     private String name;
     private String link;

@@ -1,4 +1,4 @@
-package com.example.mycompany.avitoparseapp.presentation.view;
+package com.example.mycompany.avitoparseapp.presentation.view.carfavoritescells;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,10 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.databinding.CarFavoritesFragmentLayoutBinding;
-import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarFavoritesAdapter;
+import com.example.mycompany.avitoparseapp.presentation.view.caritemfavorites.CarItemFavoritesFragment;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CarFavoritesFragment extends Fragment {

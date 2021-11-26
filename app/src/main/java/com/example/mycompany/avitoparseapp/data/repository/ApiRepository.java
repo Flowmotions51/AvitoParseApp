@@ -27,7 +27,6 @@ public class ApiRepository {
     }
 
     public Single<Car> getCar(String link) {
-
         return apiService.getItem(link);
     }
 

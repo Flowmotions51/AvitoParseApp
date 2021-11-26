@@ -1,4 +1,4 @@
-package com.example.mycompany.avitoparseapp.presentation.view;
+package com.example.mycompany.avitoparseapp.presentation.view.carcells;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,11 +15,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.mycompany.avitoparseapp.R;
 import com.example.mycompany.avitoparseapp.data.model.CarCell;
 import com.example.mycompany.avitoparseapp.databinding.CarCellsFragmentLayoutBinding;
-import com.example.mycompany.avitoparseapp.presentation.view.adapter.CarCellsAdapter;
-import com.example.mycompany.avitoparseapp.presentation.view.adapter.WrapContentGridLayoutManager;
+import com.example.mycompany.avitoparseapp.presentation.view.caritem.CarItemFragment;
 import com.example.mycompany.avitoparseapp.presentation.viewmodel.AvitoParseViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -113,6 +111,10 @@ public class CarCellsFragment extends Fragment {
         avitoParseViewModel.setNewMarkerCarCellsFavorites();
     }
 
+    /**
+     * Ищем добавленное в избранное объявление и помечаем его как "избранное"
+     * @param cell
+     */
     public void setFavoriteMutubleLiveData(CarCell cell) {
         for (CarCell carCell : recyclerViewCarCellsAdapter.getCarCells()) {
             if (carCell.getLinkToItem().equals(cell.getLinkToItem())) {
